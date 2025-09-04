@@ -1,0 +1,103 @@
+{
+  "questions": [
+    {
+      "id": 1,
+      "question": "T/F: Sedimentation I is based on discrete particle settling (Type I).",
+      "type": "true_false",
+      "correct_answer": true,
+      "explanation": "Benar. Sedimentation I memang berdasarkan discrete particle settling (Type I)."
+    },
+    {
+      "id": 2,
+      "question": "Typical detention time in a primary clarifier is…",
+      "type": "multiple_choice",
+      "options": [
+        "5–10 minutes",
+        "1,5–2,5 hours",
+        "12–24 hours",
+        "Less than 30 minutes"
+      ],
+      "correct_answer": 1,
+      "explanation": "Jawaban yang benar adalah 1,5–2,5 hours untuk primary clarifier."
+    },
+    {
+      "id": 3,
+      "question": "If flow rate doubles while surface area stays constant, the overflow rate will…",
+      "type": "multiple_choice",
+      "options": [
+        "Stay the same",
+        "Increase",
+        "Decrease",
+        "Zero"
+      ],
+      "correct_answer": 1,
+      "explanation": "Jika flow rate berlipat ganda sementara surface area tetap, overflow rate akan meningkat."
+    },
+    {
+      "id": 4,
+      "question": "Which particles usually float and are skimmed?",
+      "type": "multiple_choice",
+      "options": [
+        "Sand",
+        "Oil and grease",
+        "Flocs",
+        "Heavy grit"
+      ],
+      "correct_answer": 1,
+      "explanation": "Oil and grease biasanya mengapung dan di-skim dari permukaan."
+    },
+    {
+      "id": 5,
+      "question": "True/False: A circular clarifier usually has a bottom slope to collect sludge.",
+      "type": "true_false",
+      "correct_answer": true,
+      "explanation": "Benar. Circular clarifier biasanya memiliki bottom slope untuk mengumpulkan sludge."
+    },
+    {
+      "id": 6,
+      "question": "Which equation is most used to calculate discrete settling velocity?",
+      "type": "multiple_choice",
+      "options": [
+        "Bernoulli's equation",
+        "Stokes' law",
+        "Darcy's law",
+        "Monod model"
+      ],
+      "correct_answer": 1,
+      "explanation": "Stokes' law adalah persamaan yang paling sering digunakan untuk menghitung discrete settling velocity."
+    },
+    {
+      "id": 7,
+      "question": "If particle settling velocity < overflow rate (Vo), the particle will…",
+      "type": "multiple_choice",
+      "options": [
+        "Settle completely",
+        "Not fully settle",
+        "Float at surface",
+        "Dissolve"
+      ],
+      "correct_answer": 1,
+      "explanation": "Jika particle settling velocity lebih kecil dari overflow rate, partikel tidak akan mengendap sepenuhnya."
+    },
+    {
+      "id": 8,
+      "question": "Typical depth of a rectangular clarifier is…",
+      "type": "multiple_choice",
+      "options": [
+        "1–2 m",
+        "3–5 m",
+        "8–10 m",
+        ">12 m"
+      ],
+      "correct_answer": 1,
+      "explanation": "Kedalaman tipikal rectangular clarifier adalah 3–5 m."
+    },
+    {
+      "id": 9,
+      "question": "Calculate the settling velocity of particles with a diameter of 0.05 cm and a specific gravity of 2.65 in water at a temperature of 20°C.",
+      "type": "calculation",
+      "correct_answer": "0.16 m/s",
+      "explanation": "Menggunakan Stokes' law, settling velocity dihitung sebesar 0.16 m/s."
+    }
+  ]
+}
