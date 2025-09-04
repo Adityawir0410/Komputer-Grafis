@@ -10,7 +10,7 @@ export default function Home() {
         <h1 className="font-bold text-xl">Virtual Wastewater Treatment Plant</h1>
         <p className="mb-6 text-center">Explore the process in VR</p>
 
-        {/* ini yang penting */}
+        {/* ini yang penting test*/}
         <Link
           href="/tour/briefing"
           className="rounded-full bg-blue-600 text-white px-6 py-3 hover:bg-blue-700 transition-colors"
