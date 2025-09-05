@@ -27,7 +27,7 @@ export default function PosPage() {
 
   if (currentPosId < 1 || currentPosId > maxPos) {
     return (
-      <div className="w-full flex items-center justify-center" style={{ height: "calc(100vh - 56px)" }}>
+      <div className="w-full flex items-center justify-center h-screen">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-red-600 mb-2">Pos Tidak Ditemukan</h1>
           <p className="text-gray-600">Pos {currentPosId} tidak tersedia. Silakan pilih pos 1-{maxPos}.</p>
@@ -54,7 +54,7 @@ export default function PosPage() {
   }
 
   return (
-    <div className="relative w-full" style={{ height: "calc(100vh - 56px)" }}>
+    <div className="relative w-full h-screen">
       <MainScene>
         {renderPosContent()}
       </MainScene>
