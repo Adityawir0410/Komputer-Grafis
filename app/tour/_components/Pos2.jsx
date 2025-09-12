@@ -49,13 +49,13 @@ export default function Pos2() {
       ></a-octahedron>
 
       {/* Interactive Area Text */}
-      <a-text 
+      {/* <a-text 
         value="Pos 2: Area Interaktif\nLihat objek-objek yang bergerak!" 
         position="0 3 -3" 
         align="center" 
         color="#1F2937"
         width="6"
-      ></a-text>
+      ></a-text> */}
 
       {/* Quiz Circle in VR */}
       <a-circle
