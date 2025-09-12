@@ -14,6 +14,13 @@ export default function Pos5() {
 
   return (
     <>
+      {/* SFX: Pos 5 - Secondary Clarifier */}
+      <audio
+        src="/sounds/sfx_6_Secondary Clarifier.MP3"
+        autoPlay
+        preload="auto"
+        playsInline
+      />
       {/* Main Pos 5 Box */}
       <a-box 
         position="0 1 -5" 

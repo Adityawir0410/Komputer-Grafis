@@ -12,6 +12,13 @@ export default function Pos6() {
 
   return (
     <>
+      {/* SFX: Pos 6 - Effluent Tank */}
+      <audio
+        src="/sounds/sfx_7_Effluent Tank.MP3"
+        autoPlay
+        preload="auto"
+        playsInline
+      />
       {/* Main Pos 6 Box */}
       <a-box 
         position="0 1 -5" 

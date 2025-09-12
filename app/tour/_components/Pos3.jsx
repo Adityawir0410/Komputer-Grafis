@@ -15,6 +15,13 @@ export default function Pos3() {
 
   return (
     <>
+      {/* SFX: Pos 3 - Oxidation Ditch */}
+      <audio
+        src="/sounds/sfx_4_Oxidation Ditch.MP3"
+        autoPlay
+        preload="auto"
+        playsInline
+      />
       {/* Main Pos 3 Box */}
       <a-box 
         position="0 1 -5" 

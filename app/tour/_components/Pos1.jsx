@@ -17,6 +17,13 @@ export default function Pos1() {
 
   return (
     <>
+      {/* SFX: Pos 1 - Collection Tank */}
+      <audio
+        src="/sounds/sfx_2_Collection Tank.MP3"
+        autoPlay
+        preload="auto"
+        playsInline
+      />
       {/* Main Pos 1 Box */}
       <a-box 
         position="0 1 -5" 
