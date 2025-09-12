@@ -12,6 +12,13 @@ export default function Pos4() {
 
   return (
     <>
+      {/* SFX: Pos 4 - Sludge Distribution */}
+      <audio
+        src="/sounds/sfx_5_sludge Distribution.MP3"
+        autoPlay
+        preload="auto"
+        playsInline
+      />
       {/* Main Pos 4 Box */}
       <a-box 
         position="0 1 -5" 

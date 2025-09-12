@@ -17,6 +17,13 @@ export default function Pos7() {
 
   return (
     <>
+      {/* SFX: Pos 7 - Sludge Drying Beds */}
+      <audio
+        src="/sounds/sfx_8_Sludge Drying Beds.MP3"
+        autoPlay
+        preload="auto"
+        playsInline
+      />
       {/* Main Pos 7 Box */}
       <a-box 
         position="0 1 -5" 

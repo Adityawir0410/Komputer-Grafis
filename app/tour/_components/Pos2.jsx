@@ -15,6 +15,13 @@ export default function Pos2() {
 
   return (
     <>
+      {/* SFX: Pos 2 - Settling Tank */}
+      <audio
+        src="/sounds/sfx_3_Settling Tank.MP3"
+        autoPlay
+        preload="auto"
+        playsInline
+      />
       {/* Main Pos 2 Box */}
       <a-box 
         position="0 1 -5" 
@@ -56,6 +63,7 @@ export default function Pos2() {
         color="#1F2937"
         width="6"
       ></a-text> */}
+
 
       {/* Quiz Circle in VR */}
       <a-circle

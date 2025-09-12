@@ -5,6 +5,13 @@ import MainScene from "../../_scene/MainScene";
 export default function BriefingPage() {
   return (
     <div className="relative w-full h-screen">
+      {/* SFX: welcoming sound on briefing page */}
+      <audio
+        src="/sounds/sfx_1_wellcoming.MP3"
+        autoPlay
+        preload="auto"
+        playsInline
+      />
       <MainScene>
         {/* contoh objek 3D */}
         <a-entity
