@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import { useTour } from "../_context/TourContext";
 
 export default function VRQuizCard({ isOpen, onClose, posId, position = "0 2 -4" }) {
@@ -11,19 +11,6 @@ export default function VRQuizCard({ isOpen, onClose, posId, position = "0 2 -4"
   const [score, setScore] = useState(0);
   const { completeQuiz } = useTour();
 
-  // ---- Layout constants (mudah diatur) ----
-  const CARD_W = 5.2;
-  const CARD_H = 3.8;
-  const PADDING_X = 0.28;
-  const PADDING_Y = 0.28;
-  const HEADER_H = 0.7;
-  const FOOTER_H = 0.6;
-  const CONTENT_H = CARD_H - HEADER_H - FOOTER_H - (PADDING_Y * 2);
-  const INNER_W = CARD_W - (PADDING_X * 2);
-
-  // MSDF font agar teks tajam
-  const FONT_URL = "https://cdn.aframe.io/fonts/Roboto-msdf.json";
-
   useEffect(() => {
     if (!isOpen) return;
 
@@ -33,12 +20,29 @@ export default function VRQuizCard({ isOpen, onClose, posId, position = "0 2 -4"
         const data = await res.json();
         const all = Array.isArray(data?.questions) ? data.questions : [];
         const pid = Number(posId) || 1;
-        const start = (pid - 1) * 3;
-        const end = pid * 3;
-        let posQuestions = all.slice(start, end);
+        
+        let posQuestions = [];
+        
+        // Pos 2: questions 1-9 (indices 0-8)
+        // Pos 3: questions 10-19 (indices 9-18)
+        // Pos 5: questions 20-29 (indices 19-28)
+        if (pid === 2) {
+          posQuestions = all.slice(0, 9);
+        } else if (pid === 3) {
+          posQuestions = all.slice(9, 19);
+        } else if (pid === 5) {
+          posQuestions = all.slice(19, 29);
+        } else {
+          // Fallback for other positions
+          const start = (pid - 1) * 3;
+          const end = pid * 3;
+          posQuestions = all.slice(start, end);
+        }
+        
         if (posQuestions.length === 0 && all.length > 0) {
           posQuestions = all.slice(0, Math.min(3, all.length));
         }
+        
         setQuestions(posQuestions);
       } catch (err) {
         console.error("Error loading quiz:", err);
@@ -49,33 +53,33 @@ export default function VRQuizCard({ isOpen, onClose, posId, position = "0 2 -4"
     load();
   }, [isOpen, posId]);
 
-  const handleAnswerSelect = (answerIndex) => setSelectedAnswer(answerIndex);
+  const handleAnswerSelect = (answerIndex) => {
+    setSelectedAnswer(answerIndex);
+  };
 
   const handleNextQuestion = () => {
     const newAnswers = [...userAnswers, selectedAnswer];
     setUserAnswers(newAnswers);
 
     if (currentQuestion < questions.length - 1) {
-      setCurrentQuestion((q) => q + 1);
+      setCurrentQuestion(q => q + 1);
       setSelectedAnswer(null);
-      return;
-    }
+    } else {
+      let correct = 0;
+      newAnswers.forEach((ans, idx) => {
+        const q = questions[idx];
+        if (q?.type === "true_false") {
+          const correctIndex = typeof q.correct_answer === "boolean" ? (q.correct_answer ? 0 : 1) : q.correct_answer;
+          if (ans === correctIndex) correct++;
+        } else if (q?.type === "multiple_choice") {
+          if (ans === q.correct_answer) correct++;
+        }
+      });
 
-    // hitung skor
-    let correct = 0;
-    newAnswers.forEach((ans, idx) => {
-      const q = questions[idx];
-      if (q?.type === "true_false") {
-        const correctIndex =
-          typeof q.correct_answer === "boolean" ? (q.correct_answer ? 0 : 1) : q.correct_answer;
-        if (ans === correctIndex) correct++;
-      } else if (q?.type === "multiple_choice") {
-        if (ans === q.correct_answer) correct++;
-      }
-    });
-    const finalScore = questions.length > 0 ? Math.round((correct / questions.length) * 100) : 0;
-    setScore(finalScore);
-    setShowResult(true);
+      const finalScore = questions.length > 0 ? Math.round((correct / questions.length) * 100) : 0;
+      setScore(finalScore);
+      setShowResult(true);
+    }
   };
 
   const handleCloseQuiz = () => {
@@ -89,191 +93,174 @@ export default function VRQuizCard({ isOpen, onClose, posId, position = "0 2 -4"
     setQuestions([]);
   };
 
-  const progressWidth = useMemo(() => {
-    const ratio = questions.length ? (currentQuestion + 1) / questions.length : 0;
-    return Math.max(0.001, ratio * (INNER_W)); // jangan nol supaya tetap terlihat
-  }, [currentQuestion, questions.length, INNER_W]);
-
   if (!isOpen || questions.length === 0) return null;
-  const question = questions[currentQuestion];
 
-  // posisi util
-  const headerY = (CARD_H / 2) - PADDING_Y - (HEADER_H / 2);
-  const footerY = -(CARD_H / 2) + PADDING_Y + (FOOTER_H / 2);
-  const contentTopY = headerY - (HEADER_H / 2) - 0.12;
-  const contentCenterY = (contentTopY + footerY) / 2 + 0.2;
+  const question = questions[currentQuestion];
 
   return (
     <a-entity position={position} visible={isOpen}>
-      {/* Shadow/backplate */}
+      {/* Main Card Background */}
       <a-plane
-        position={`0 0 -0.18`}
-        width={CARD_W + 0.2}
-        height={CARD_H + 0.2}
-        color="#0B1020"
-        opacity="0.18"
-      ></a-plane>
-
-      {/* Kartu utama */}
-      <a-plane
-        position={`0 0 -0.12`}
-        width={CARD_W}
-        height={CARD_H}
+        position="0 0 -0.1"
+        width="4.5"
+        height="3.2"
         color="#FFFFFF"
         opacity="0.98"
-        material="shader: flat"
-        animation="property: scale; from: 0.9 0.9 0.9; to: 1 1 1; dur: 300; easing: easeOutCubic"
+        animation="property: scale; from: 0.8 0.8 0.8; to: 1 1 1; dur: 400"
       ></a-plane>
 
-      {/* Header */}
+      {/* Card Border */}
       <a-plane
-        position={`0 ${headerY} -0.1`}
-        width={CARD_W}
-        height={HEADER_H}
-        color="#F8FAFC"
-        material="shader: flat"
-      ></a-plane>
-
-      {/* Garis bawah header */}
-      <a-plane
-        position={`0 ${headerY - (HEADER_H / 2)} -0.09`}
-        width={CARD_W}
-        height="0.02"
-        color="#E2E8F0"
+        position="0 0 -0.09"
+        width="4.6"
+        height="3.3"
+        color="#E5E7EB"
       ></a-plane>
 
       {!showResult ? (
         <>
-          {/* Judul & nomor soal */}
+          {/* Header */}
           <a-text
             value={`Quiz Pos ${posId}`}
-            position={`${-CARD_W / 2 + PADDING_X} ${headerY + 0.08} 0`}
-            color="#0F172A"
-            width="8"
+            position="-2 1.4 0"
+            color="#1F2937"
+            width="7"
             align="left"
-            baseline="center"
-            font={FONT_URL}
-            negate="false"
           ></a-text>
 
           <a-text
             value={`${currentQuestion + 1}/${questions.length}`}
-            position={`${CARD_W / 2 - PADDING_X} ${headerY + 0.08} 0`}
-            color="#64748B"
-            width="6"
+            position="2 1.4 0"
+            color="#6B7280"
+            width="5"
             align="right"
-            baseline="center"
-            font={FONT_URL}
-            negate="false"
           ></a-text>
 
-          {/* Tombol close */}
-          <a-plane
-            position={`${CARD_W / 2 - PADDING_X - 0.18} ${headerY - 0.06} 0.01`}
-            width="0.36"
-            height="0.36"
-            color="#FEE2E2"
+          {/* Close Button */}
+          <a-circle
+            position="1.8 1.1 0.01"
+            radius="0.12"
+            color="#EF4444"
             class="clickable"
             onClick={onClose}
           >
             <a-text
-              value="✕"
+              value="×"
               position="0 0 0.01"
-              color="#B91C1C"
-              width="8"
+              color="white"
+              width="10"
               align="center"
-              baseline="center"
-              font={FONT_URL}
-              negate="false"
             ></a-text>
-          </a-plane>
+          </a-circle>
 
-          {/* Progress bar */}
+          {/* Progress Bar */}
           <a-plane
-            position={`0 ${headerY - 0.25} 0.01`}
-            width={INNER_W}
-            height="0.12"
-            color="#F1F5F9"
+            position="0 0.85 0.01"
+            width="4"
+            height="0.08"
+            color="#F3F4F6"
           ></a-plane>
+
           <a-plane
-            position={`${-INNER_W / 2 + progressWidth / 2} ${headerY - 0.25} 0.02`}
-            width={progressWidth}
-            height="0.12"
+            position={`${-2 + (((currentQuestion + 1) / questions.length) * 4) / 2} 0.85 0.02`}
+            width={((currentQuestion + 1) / questions.length) * 4}
+            height="0.08"
             color="#3B82F6"
           ></a-plane>
 
-          {/* Kontainer pertanyaan */}
-          <a-plane
-            position={`0 ${contentTopY - 0.35} -0.05`}
-            width={INNER_W}
-            height="0.9"
-            color="#FAFAFA"
-            opacity="0.65"
-          ></a-plane>
+          {/* Question */}
           <a-text
             value={question?.question || "Loading..."}
-            position={`${-INNER_W / 2 + 0.1} ${contentTopY - 0.25} 0`}
-            color="#0F172A"
-            width="6.6"
-            wrap-count="40"
-            align="left"
-            baseline="top"
-            font={FONT_URL}
-            negate="false"
+            position="-2 0.3 0"
+            color="#1F2937"
+            width="5.5"
+            wrap-count="35"
           ></a-text>
 
-          {/* Opsi jawaban */}
+          {/* Answer Options */}
           {question?.type === "true_false" ? (
             <>
-              <AnswerButton
-                x={-INNER_W / 4}
-                y={contentCenterY - 0.15}
-                w={INNER_W / 2 - 0.1}
-                h={0.46}
-                active={selectedAnswer === 0}
-                labelLeftIcon="✓"
-                label="True"
+              {/* True Option */}
+              <a-plane
+                position="-1 -0.3 0.01"
+                width="1.8"
+                height="0.4"
+                color={selectedAnswer === 0 ? "#DBEAFE" : "#F9FAFB"}
+                class="clickable"
                 onClick={() => handleAnswerSelect(0)}
-              />
-              <AnswerButton
-                x={INNER_W / 4}
-                y={contentCenterY - 0.15}
-                w={INNER_W / 2 - 0.1}
-                h={0.46}
-                active={selectedAnswer === 1}
-                labelLeftIcon="✗"
-                danger
-                label="False"
+              >
+                <a-plane
+                  position="0 0 -0.01"
+                  width="1.85"
+                  height="0.45"
+                  color={selectedAnswer === 0 ? "#3B82F6" : "#E5E7EB"}
+                ></a-plane>
+                <a-text
+                  value="True"
+                  position="0 0 0.01"
+                  color={selectedAnswer === 0 ? "#FFFFFF" : "#374151"}
+                  width="5"
+                  align="center"
+                ></a-text>
+              </a-plane>
+
+              {/* False Option */}
+              <a-plane
+                position="1 -0.3 0.01"
+                width="1.8"
+                height="0.4"
+                color={selectedAnswer === 1 ? "#DBEAFE" : "#F9FAFB"}
+                class="clickable"
                 onClick={() => handleAnswerSelect(1)}
-              />
+              >
+                <a-plane
+                  position="0 0 -0.01"
+                  width="1.85"
+                  height="0.45"
+                  color={selectedAnswer === 1 ? "#3B82F6" : "#E5E7EB"}
+                ></a-plane>
+                <a-text
+                  value="False"
+                  position="0 0 0.01"
+                  color={selectedAnswer === 1 ? "#FFFFFF" : "#374151"}
+                  width="5"
+                  align="center"
+                ></a-text>
+              </a-plane>
             </>
           ) : (
-            (question?.options || []).map((option, index) => {
-              const rowTop = contentCenterY - 0.15; // anchor
-              const spacing = 0.38;
-              const y = rowTop - index * spacing;
-              return (
-                <AnswerRow
-                  key={index}
-                  x={0}
-                  y={y}
-                  w={INNER_W}
-                  h={0.34}
-                  active={selectedAnswer === index}
-                  badge={String.fromCharCode(65 + index)}
-                  text={option}
-                  onClick={() => handleAnswerSelect(index)}
-                  font={FONT_URL}
-                />
-              );
-            })
+            (question?.options || []).map((option, index) => (
+              <a-plane
+                key={index}
+                position={`0 ${0.1 - (index * 0.25)} 0.01`}
+                width="4"
+                height="0.22"
+                color={selectedAnswer === index ? "#DBEAFE" : "#F9FAFB"}
+                class="clickable"
+                onClick={() => handleAnswerSelect(index)}
+              >
+                <a-plane
+                  position="0 0 -0.01"
+                  width="4.05"
+                  height="0.27"
+                  color={selectedAnswer === index ? "#3B82F6" : "#E5E7EB"}
+                ></a-plane>
+                <a-text
+                  value={option}
+                  position="-1.8 0 0.01"
+                  color={selectedAnswer === index ? "#FFFFFF" : "#374151"}
+                  width="5"
+                  wrap-count="30"
+                ></a-text>
+              </a-plane>
+            ))
           )}
 
-          {/* Footer: tombol navigasi */}
+          {/* Navigation Buttons */}
           <a-plane
-            position={`${-INNER_W / 4} ${footerY} 0.01`}
-            width={INNER_W / 2 - 0.1}
-            height="0.42"
+            position="-1.2 -1.3 0.01"
+            width="1.2"
+            height="0.3"
             color="#6B7280"
             class="clickable"
             onClick={onClose}
@@ -282,174 +269,82 @@ export default function VRQuizCard({ isOpen, onClose, posId, position = "0 2 -4"
               value="Cancel"
               position="0 0 0.01"
               color="white"
-              width="6"
+              width="5"
               align="center"
-              baseline="center"
-              font={FONT_URL}
-              negate="false"
             ></a-text>
           </a-plane>
 
           <a-plane
-            position={`${INNER_W / 4} ${footerY} 0.01`}
-            width={INNER_W / 2 - 0.1}
-            height="0.42"
-            color={selectedAnswer !== null ? "#3B82F6" : "#CBD5E1"}
+            position="1.2 -1.3 0.01"
+            width="1.2"
+            height="0.3"
+            color={selectedAnswer !== null ? "#3B82F6" : "#9CA3AF"}
             class="clickable"
             onClick={selectedAnswer !== null ? handleNextQuestion : undefined}
           >
             <a-text
-              value={currentQuestion < questions.length - 1 ? "Next →" : "Finish"}
+              value={currentQuestion < questions.length - 1 ? "Next" : "Finish"}
               position="0 0 0.01"
               color="white"
-              width="6"
+              width="5"
               align="center"
-              baseline="center"
-              font={FONT_URL}
-              negate="false"
             ></a-text>
           </a-plane>
         </>
       ) : (
-        // ----- Result screen -----
+        /* Results */
         <>
-          <a-circle
-            position={`0 ${headerY - 0.2} 0.01`}
-            radius="0.64"
-            color={score >= 70 ? "#ECFDF5" : "#FEF2F2"}
-          ></a-circle>
-
+          {/* Trophy */}
           <a-text
             value="🏆"
-            position={`0 ${headerY - 0.2} 0.02`}
-            width="15"
+            position="0 0.8 0"
+            color={score >= 70 ? "#10B981" : "#EF4444"}
+            width="12"
             align="center"
-            baseline="center"
           ></a-text>
 
           <a-text
             value={`${score}%`}
-            position={`0 ${contentCenterY + 0.4} 0`}
-            color="#0F172A"
-            width="12"
+            position="0 0.3 0"
+            color="#1F2937"
+            width="10"
             align="center"
-            baseline="center"
-            font={FONT_URL}
-            negate="false"
           ></a-text>
 
           <a-text
-            value={score >= 70 ? "Excellent Work!" : "Keep Learning!"}
-            position={`0 ${contentCenterY + 0.1} 0`}
-            color="#1E293B"
-            width="8"
-            align="center"
-            baseline="center"
-            font={FONT_URL}
-            negate="false"
-          ></a-text>
-
-          <a-text
-            value={`You scored ${score} points out of 100`}
-            position={`0 ${contentCenterY - 0.15} 0`}
-            color="#64748B"
+            value={score >= 70 ? "Great Job!" : "Keep Learning!"}
+            position="0 0 0"
+            color="#1F2937"
             width="6"
             align="center"
-            baseline="center"
-            font={FONT_URL}
-            negate="false"
+          ></a-text>
+
+          <a-text
+            value={`You scored ${score} points!`}
+            position="0 -0.3 0"
+            color="#6B7280"
+            width="5"
+            align="center"
           ></a-text>
 
           <a-plane
-            position={`0 ${footerY} 0.01`}
-            width={INNER_W}
-            height="0.48"
-            color="#10B981"
+            position="0 -0.9 0.01"
+            width="2"
+            height="0.4"
+            color="#3B82F6"
             class="clickable"
             onClick={handleCloseQuiz}
           >
             <a-text
-              value="Continue Tour →"
+              value="Continue"
               position="0 0 0.01"
               color="white"
-              width="6"
+              width="5"
               align="center"
-              baseline="center"
-              font={FONT_URL}
-              negate="false"
             ></a-text>
           </a-plane>
         </>
       )}
     </a-entity>
-  );
-}
-
-/** Komponen opsi jawaban berbentuk bar penuh */
-function AnswerRow({ x, y, w, h, active, badge, text, onClick, font }) {
-  const baseColor = active ? "#2563EB" : "#E2E8F0";
-  const fillColor = active ? "#DBEAFE" : "#F8FAFC";
-  const textColor = active ? "#FFFFFF" : "#374151";
-  const badgeBg = active ? "#FFFFFF" : "#94A3B8";
-  const badgeText = active ? "#2563EB" : "#FFFFFF";
-
-  return (
-    <a-plane position={`${x} ${y} 0.01`} width={w} height={h} color={fillColor} class="clickable" onClick={onClick}>
-      <a-plane position={`0 0 -0.01`} width={w + 0.04} height={h + 0.04} color={baseColor} opacity="0.8"></a-plane>
-
-      {/* Badge kiri */}
-      <a-circle position={`${-w / 2 + 0.25} 0 0.01`} radius="0.07" color={badgeBg}>
-        <a-text
-          value={badge}
-          position="0 0 0.01"
-          color={badgeText}
-          width="8"
-          align="center"
-          baseline="center"
-          font={font}
-          negate="false"
-        ></a-text>
-      </a-circle>
-
-      {/* Teks opsi */}
-      <a-text
-        value={text}
-        position={`${-w / 2 + 0.45} 0 0.01`}
-        color={textColor}
-        width="6.5"
-        wrap-count="46"
-        align="left"
-        baseline="center"
-        font={font}
-        negate="false"
-      ></a-text>
-    </a-plane>
-  );
-}
-
-/** Komponen tombol jawaban True/False */
-function AnswerButton({ x, y, w, h, active, labelLeftIcon, label, danger, onClick }) {
-  const base = active ? (danger ? "#DC2626" : "#2563EB") : "#E2E8F0";
-  const fill = active ? (danger ? "#FEE2E2" : "#DBEAFE") : "#F8FAFC";
-  const text = active ? "#FFFFFF" : "#374151";
-  const iconBg = danger ? "#EF4444" : "#10B981";
-
-  return (
-    <a-plane position={`${x} ${y} 0.01`} width={w} height={h} color={fill} class="clickable" onClick={onClick}>
-      <a-plane position={`0 0 -0.01`} width={w + 0.04} height={h + 0.04} color={base} opacity="0.85"></a-plane>
-
-      <a-circle position={`${-w / 2 + 0.25} 0 0.01`} radius="0.085" color={iconBg}>
-        <a-text value={labelLeftIcon} position="0 0 0.01" color="#FFFFFF" width="8" align="center" baseline="center"></a-text>
-      </a-circle>
-
-      <a-text
-        value={label}
-        position={`${-w / 2 + 0.5} 0 0.01`}
-        color={active ? "#0B1020" : text}
-        width="5"
-        align="left"
-        baseline="center"
-      ></a-text>
-    </a-plane>
   );
 }

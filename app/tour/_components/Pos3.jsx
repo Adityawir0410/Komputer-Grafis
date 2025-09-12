@@ -3,28 +3,15 @@ import { useState, useEffect } from 'react';
 import { useTour } from '../_context/TourContext';
 import { useRouter } from 'next/navigation';
 import VRQuizCard from './VRQuizCard';
+import VRNavigation from './VRNavigation';
 
 export default function Pos3() {
   const [showQuiz, setShowQuiz] = useState(false);
-  const { setCurrentPos, quizCompleted, maxPos } = useTour();
-  const router = useRouter();
+  const { setCurrentPos, quizCompleted, quizPositions } = useTour();
 
   useEffect(() => {
     setCurrentPos(3);
   }, [setCurrentPos]);
-
-  // Check if all quizzes are completed and redirect to closing
-  useEffect(() => {
-    const allQuizzesComplete = Array.from({ length: maxPos }, (_, i) => i + 1)
-      .every(pos => quizCompleted[pos]);
-    
-    if (allQuizzesComplete && Object.keys(quizCompleted).length === maxPos) {
-      // Delay redirect to allow user to see completion
-      setTimeout(() => {
-        router.push('/tour/closing');
-      }, 3000);
-    }
-  }, [quizCompleted, maxPos, router]);
 
   return (
     <>
@@ -73,16 +60,16 @@ export default function Pos3() {
         shadow="cast: true"
       ></a-icosahedron>
 
-      {/* Final Destination Text */}
+      {/* Updated text - no longer final destination */}
       <a-text 
-        value="Pos 3: Final Destination\nSelamat! Anda telah menyelesaikan tour!" 
+        value="Pos 3: Oxidation Ditch\nComplete the quiz to continue!" 
         position="0 3 -3" 
         align="center" 
         color="#1F2937"
         width="6"
       ></a-text>
 
-      {/* Quiz Circle in VR */}
+      {/* Quiz Circle in VR - This was missing! */}
       <a-circle
         position="4 2 -3"
         radius="0.4"
@@ -108,26 +95,46 @@ export default function Pos3() {
         width="4"
       ></a-text>
 
+      {/* Show instruction to complete quiz if not done */}
+      {!quizCompleted[3] && (
+        <a-text 
+          value="Complete the quiz to proceed to next position!" 
+          position="0 1.5 -3" 
+          align="center" 
+          color="#DC2626"
+          width="5"
+          animation="property: scale; to: 1.05 1.05 1.05; dir: alternate; loop: true; dur: 1500"
+        ></a-text>
+      )}
+
       {/* VR Quiz Card */}
       <VRQuizCard 
         isOpen={showQuiz}
         onClose={() => setShowQuiz(false)}
         posId={3}
-        position="0 2 -4"
+        position="0 3.5 -3"
       />
 
-      {/* Completion message when all quizzes done */}
-      {Object.keys(quizCompleted).length === maxPos && (
-        <a-text 
-          value="Semua kuis selesai!\nAnda akan diarahkan ke halaman penutup..." 
-          position="0 2 -2" 
-          align="center" 
-          color="#10B981"
-          width="6"
-          animation="property: scale; to: 1.1 1.1 1.1; dir: alternate; loop: true; dur: 1000"
-        ></a-text>
-      )}
+      {/* VR Navigation - Updated maxPos to 7 */}
+      <VRNavigation currentPosId={3} maxPos={7} />
     </>
   );
 }
+//       {/* VR Navigation */}
+//       <VRNavigation currentPosId={3} maxPos={3} />
 
+//       {/* Completion message when all quizzes done */}
+//       {canFinishTour && (
+//         <a-text 
+//           value="All quizzes completed!\nLook right for the finish button." 
+//           position="0 2 -2" 
+//           align="center" 
+//           color="#10B981"
+//           width="6"
+//           animation="property: scale; to: 1.05 1.05 1.05; dir: alternate; loop: true; dur: 2000"
+//         ></a-text>
+//       )}
+//     </>
+//   );
+// }
+            

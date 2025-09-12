@@ -5,14 +5,17 @@ import MainScene from "../../../_scene/MainScene";
 import Pos1 from "../../../_components/Pos1";
 import Pos2 from "../../../_components/Pos2";
 import Pos3 from "../../../_components/Pos3";
-import PosNavigation from "../../../_components/PosNavigation";
+import Pos4 from "../../../_components/Pos4";
+import Pos5 from "../../../_components/Pos5";
+import Pos6 from "../../../_components/Pos6";
+import Pos7 from "../../../_components/Pos7";
 import VRLoading from "../../../_components/VRLoading";
 
 export default function PosPage() {
   const params = useParams();
   const [ready, setReady] = useState(false);
   const currentPosId = parseInt(params.id);
-  const maxPos = 3;
+  const maxPos = 7; // Updated to 7 positions
 
   useEffect(() => {
     let alive = true;
@@ -44,6 +47,14 @@ export default function PosPage() {
         return <Pos2 />;
       case 3:
         return <Pos3 />;
+      case 4:
+        return <Pos4 />;
+      case 5:
+        return <Pos5 />;
+      case 6:
+        return <Pos6 />;
+      case 7:
+        return <Pos7 />;
       default:
         return null;
     }
@@ -58,7 +69,6 @@ export default function PosPage() {
       <MainScene>
         {renderPosContent()}
       </MainScene>
-      <PosNavigation currentPosId={currentPosId} maxPos={maxPos} />
     </div>
   );
 }

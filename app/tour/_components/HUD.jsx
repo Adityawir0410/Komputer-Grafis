@@ -13,7 +13,9 @@ export default function HUD() {
     isInitialized, 
     timerFrozen, 
     tourCompleted,
-    timerStarted 
+    timerStarted,
+    quizPositions,
+    quizCompleted
   } = useTour();
 
   // Don't render until context is properly initialized
@@ -38,10 +40,7 @@ export default function HUD() {
             </div>
             <div>
               <p className="text-xs text-gray-300">
-                {!timerStarted ? 'Time (Not Started)' 
-                 : timerFrozen ? 'Final Time' 
-                 : 'Time'}
-                {timerFrozen && <span className="text-orange-400 ml-1">🔒</span>}
+                {!timerStarted ? 'Time (Not Started)' : 'Time'}
                 {!timerStarted && <span className="text-gray-400 ml-1">⏸</span>}
               </p>
               <p className={`text-xl font-bold ${
@@ -52,9 +51,6 @@ export default function HUD() {
               </p>
               {!timerStarted && (
                 <p className="text-xs text-gray-400 mt-1">Reach Pos 1 to start</p>
-              )}
-              {timerFrozen && (
-                <p className="text-xs text-orange-300 mt-1">FROZEN</p>
               )}
             </div>
           </div>
@@ -67,24 +63,39 @@ export default function HUD() {
           <div className="flex items-center gap-3">
             <span className="text-sm font-medium">Progress:</span>
             <div className="flex gap-2">
-              {Array.from({ length: maxPos }, (_, i) => (
-                <div
-                  key={i + 1}
-                  className={`w-4 h-4 rounded-full transition-all duration-300 ${
-                    i + 1 <= currentPos 
-                      ? tourCompleted 
-                        ? 'bg-green-500 shadow-lg shadow-green-500/50' 
-                        : 'bg-blue-500 shadow-lg shadow-blue-500/50'
-                      : 'bg-gray-600'
-                  }`}
-                />
-              ))}
+              {Array.from({ length: maxPos }, (_, i) => {
+                const posNum = i + 1;
+                const hasQuiz = quizPositions.includes(posNum);
+                const isQuizCompleted = quizCompleted[posNum];
+                
+                return (
+                  <div key={posNum} className="relative">
+                    <div
+                      className={`w-4 h-4 rounded-full transition-all duration-300 ${
+                        posNum <= currentPos 
+                          ? tourCompleted 
+                            ? 'bg-green-500 shadow-lg shadow-green-500/50' 
+                            : 'bg-blue-500 shadow-lg shadow-blue-500/50'
+                          : 'bg-gray-600'
+                      }`}
+                    />
+                    {hasQuiz && (
+                      <div className={`absolute -top-1 -right-1 w-2 h-2 rounded-full ${
+                        isQuizCompleted ? 'bg-green-400' : 'bg-yellow-400'
+                      }`}></div>
+                    )}
+                  </div>
+                );
+              })}
             </div>
             <span className="text-sm text-gray-300">
               {currentPos}/{maxPos}
               {tourCompleted && <span className="text-green-400 ml-2">✓</span>}
             </span>
           </div>
+          {/* <div className="text-xs text-gray-400 mt-1 text-center">
+            Quiz: Pos 2 & 3 only
+          </div> */}
         </div>
       </div>
     </div>
