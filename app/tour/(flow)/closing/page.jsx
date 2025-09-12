@@ -5,7 +5,7 @@ import { useTour } from "../../_context/TourContext";
 import { useEffect } from "react";
 
 export default function ClosingPage() {
-  const { totalScore, completeTourAndReset, formatTime, timeRemaining, timerFrozen } = useTour();
+  const { totalScore, completeTourAndReset, formatTime, timeRemaining } = useTour();
 
   const handleReturnHome = () => {
     completeTourAndReset();
@@ -36,20 +36,12 @@ export default function ClosingPage() {
               <p className="text-2xl font-bold text-green-600">{totalScore}</p>
             </div>
             <div>
-              <p className="text-gray-500">
-                Waktu {timerFrozen ? "Final" : "Tersisa"}
-              </p>
+              <p className="text-gray-500">Waktu Final</p>
               <p className="text-2xl font-bold text-orange-600">
                 {formatTime(timeRemaining)}
-                {timerFrozen && <span className="text-sm ml-1">⏸</span>}
               </p>
             </div>
           </div>
-          {timerFrozen && (
-            <p className="text-xs text-gray-500 mt-2">
-              ⏸ Waktu dibekukan saat tour selesai
-            </p>
-          )}
         </div>
 
         <Link 
@@ -67,3 +59,4 @@ export default function ClosingPage() {
     </main>
   );
 }
+        

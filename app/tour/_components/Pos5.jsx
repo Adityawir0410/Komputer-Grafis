@@ -4,26 +4,26 @@ import { useTour } from '../_context/TourContext';
 import VRQuizCard from './VRQuizCard';
 import VRNavigation from './VRNavigation';
 
-export default function Pos2() {
+export default function Pos5() {
   const [showQuiz, setShowQuiz] = useState(false);
   const { setCurrentPos, quizCompleted } = useTour();
 
-  // Set current pos when component mounts
   useEffect(() => {
-    setCurrentPos(2);
+    setCurrentPos(5);
   }, [setCurrentPos]);
 
   return (
     <>
-      {/* Main Pos 2 Box */}
+      {/* Main Pos 5 Box */}
       <a-box 
         position="0 1 -5" 
         rotation="0 45 0" 
-        color="#059669"
+        color="#DB2777"
         animation="property: rotation; to: 0 405 0; loop: true; dur: 10000"
+        shadow="cast: true"
       >
         <a-text 
-          value="POS 2" 
+          value="POS 5" 
           position="0 1 0.6" 
           align="center" 
           color="white"
@@ -31,26 +31,26 @@ export default function Pos2() {
         ></a-text>
       </a-box>
 
-      {/* Interactive Cylinder */}
-      <a-cylinder 
-        position="3 1 -4" 
+      {/* Interactive Elements */}
+      <a-dodecahedron 
+        position="-3 1.5 -4" 
         radius="0.5" 
-        height="1" 
-        color="#10B981"
-        animation="property: rotation; to: 0 360 0; loop: true; dur: 3000"
-      ></a-cylinder>
+        color="#06B6D4"
+        animation="property: position; to: -3 2.5 -4; dir: alternate; loop: true; dur: 2000"
+        shadow="cast: true"
+      ></a-dodecahedron>
 
-      {/* Interactive Octahedron */}
-      <a-octahedron 
-        position="-3 1 -4" 
-        radius="0.6" 
+      <a-capsule 
+        position="3 1 -4" 
+        radius="0.3"
+        height="1.2" 
         color="#F59E0B"
-        animation="property: position; to: -3 2.5 -4; dir: alternate; loop: true; dur: 2500"
-      ></a-octahedron>
+        animation="property: rotation; to: 0 0 360; loop: true; dur: 5000"
+        shadow="cast: true"
+      ></a-capsule>
 
-      {/* Interactive Area Text */}
       <a-text 
-        value="Pos 2: Area Interaktif\nLihat objek-objek yang bergerak!" 
+        value="Pos 5: Secondary Clarifier Stage\nComplete the quiz to proceed!" 
         position="0 3 -3" 
         align="center" 
         color="#1F2937"
@@ -61,13 +61,13 @@ export default function Pos2() {
       <a-circle
         position="4 2 -3"
         radius="0.4"
-        color={quizCompleted[2] ? "#10B981" : "#3B82F6"}
+        color={quizCompleted[5] ? "#10B981" : "#3B82F6"}
         class="clickable"
-        onClick={() => !quizCompleted[2] && setShowQuiz(true)}
-        animation={!quizCompleted[2] ? "property: scale; to: 1.1 1.1 1.1; dir: alternate; loop: true; dur: 1000" : ""}
+        onClick={() => !quizCompleted[5] && setShowQuiz(true)}
+        animation={!quizCompleted[5] ? "property: scale; to: 1.1 1.1 1.1; dir: alternate; loop: true; dur: 1000" : ""}
       >
         <a-text
-          value={quizCompleted[2] ? "✓" : "?"}
+          value={quizCompleted[5] ? "✓" : "?"}
           position="0 0 0.01"
           align="center"
           color="white"
@@ -83,16 +83,14 @@ export default function Pos2() {
         width="4"
       ></a-text>
 
-      {/* VR Quiz Card - Moved higher */}
       <VRQuizCard 
         isOpen={showQuiz}
         onClose={() => setShowQuiz(false)}
-        posId={2}
+        posId={5}
         position="0 3.5 -3"
       />
 
-      {/* VR Navigation - Updated maxPos to 7 */}
-      <VRNavigation currentPosId={2} maxPos={7} />
+      <VRNavigation currentPosId={5} maxPos={7} />
     </>
   );
 }

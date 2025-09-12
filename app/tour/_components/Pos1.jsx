@@ -1,11 +1,10 @@
 "use client";
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useTour } from '../_context/TourContext';
-import VRQuizCard from './VRQuizCard';
+import VRNavigation from './VRNavigation';
 
 export default function Pos1() {
-  const [showQuiz, setShowQuiz] = useState(false);
-  const { setCurrentPos, startTimer, timerStarted, quizCompleted } = useTour();
+  const { setCurrentPos, startTimer, timerStarted } = useTour();
 
   useEffect(() => {
     setCurrentPos(1);
@@ -73,40 +72,17 @@ export default function Pos1() {
         animation="property: scale; to: 1.1 1.1 1.1; dir: alternate; loop: true; dur: 1000"
       ></a-text>
 
-      {/* Quiz Circle in VR */}
-      <a-circle
-        position="4 2 -3"
-        radius="0.4"
-        color={quizCompleted[1] ? "#10B981" : "#3B82F6"}
-        class="clickable"
-        onClick={() => !quizCompleted[1] && setShowQuiz(true)}
-        animation={!quizCompleted[1] ? "property: scale; to: 1.1 1.1 1.1; dir: alternate; loop: true; dur: 1000" : ""}
-      >
-        <a-text
-          value={quizCompleted[1] ? "✓" : "?"}
-          position="0 0 0.01"
-          align="center"
-          color="white"
-          width="8"
-        ></a-text>
-      </a-circle>
-
-      <a-text
-        value="QUIZ"
-        position="4 1.3 -3"
-        align="center"
-        color="#1F2937"
-        width="4"
+      {/* Navigation instruction */}
+      <a-text 
+        value="Lanjutkan ke Pos 2 untuk mulai quiz!" 
+        position="0 1.8 -3" 
+        align="center" 
+        color="#6366F1"
+        width="5"
       ></a-text>
 
-      {/* VR Quiz Card */}
-      <VRQuizCard 
-        isOpen={showQuiz}
-        onClose={() => setShowQuiz(false)}
-        posId={1}
-        position="0 2 -4"
-      />
+      {/* VR Navigation - Updated maxPos to 7 */}
+      <VRNavigation currentPosId={1} maxPos={7} />
     </>
   );
 }
-
