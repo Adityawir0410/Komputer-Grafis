@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { useTour } from "../_context/TourContext";
 
-export default function VRQuizCard({ isOpen, onClose, posId, position = "0 2 -4" }) {
+export default function VRQuizCard({ isOpen, onClose, posId, position = "0 2 -3" }) {
   const [questions, setQuestions] = useState([]);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
@@ -10,6 +10,25 @@ export default function VRQuizCard({ isOpen, onClose, posId, position = "0 2 -4"
   const [showResult, setShowResult] = useState(false);
   const [score, setScore] = useState(0);
   const { completeQuiz } = useTour();
+
+  // Estimate wrapped lines to drive flexible layout
+  const WRAP_COUNT = 44; // make characters smaller, reduce line count visually
+  const estimateLines = (text, wrap = WRAP_COUNT) => {
+    if (!text) return 1;
+    const words = String(text).split(/\s+/);
+    let lines = 1;
+    let current = 0;
+    for (const w of words) {
+      const len = w.length + (current === 0 ? 0 : 1);
+      if (current + len > wrap) {
+        lines += 1;
+        current = w.length;
+      } else {
+        current += len;
+      }
+    }
+    return Math.max(lines, 1);
+  };
 
   useEffect(() => {
     if (!isOpen) return;
@@ -96,200 +115,199 @@ export default function VRQuizCard({ isOpen, onClose, posId, position = "0 2 -4"
   if (!isOpen || questions.length === 0) return null;
 
   const question = questions[currentQuestion];
+  const progress = questions.length > 0 ? (currentQuestion + 1) / questions.length : 0;
+  // Layout constants to keep inside frame
+  const CARD_INNER_WIDTH = 4.2; // must be <= main card width - margins
+  const OPTION_HEIGHT = 0.3;
+  const OPTION_GAP = 0.34; // spacing between options to avoid overlap
+
+  const optionCount = question?.type === "true_false" ? 2 : (question?.options?.length || 0);
+  const qLines = estimateLines(question?.question, WRAP_COUNT);
+  const BASE_CARD_HEIGHT = 3.1;
+  const headerBlock = 0.9; // title + counter + progress + spacing
+  const footerBlock = 0.6; // buttons area
+  const LINE_SPACING = 0.24; // vertical spacing per question line (world units)
+  const optionsBlock = optionCount * OPTION_GAP + 0.12;
+  const questionBlock = qLines * LINE_SPACING + 0.22;
+  const requiredHeight = headerBlock + questionBlock + optionsBlock + footerBlock;
+  const mainHeight = Math.max(BASE_CARD_HEIGHT, requiredHeight);
+  const outerHeight = mainHeight + 0.2;
+  const half = mainHeight / 2;
+  const topEdge = half;
+  const bottomEdge = -half;
+  const headerY = topEdge - 0.37;
+  const dividerY = headerY - 0.40;
+  const questionTopY = dividerY - 0.12;
+  const optionsStartY = questionTopY - qLines * LINE_SPACING - 0.20;
+  const buttonsY = bottomEdge + 0.45;
 
   return (
-    <a-entity position={position} visible={isOpen}>
-      {/* Main Card Background */}
+    <a-entity position={position} visible={isOpen} ui-overlay>
+      {/* Subtle drop shadow */}
       <a-plane
-        position="0 0 -0.1"
-        width="4.5"
-        height="3.2"
-        color="#FFFFFF"
-        opacity="0.98"
-        animation="property: scale; from: 0.8 0.8 0.8; to: 1 1 1; dur: 400"
+        position="0 -0.03 -0.12"
+        width="4.6"
+        height={outerHeight}
+        color="#000000"
+        opacity="0.10"
       ></a-plane>
 
-      {/* Card Border */}
+      {/* Outer frame */}
       <a-plane
-        position="0 0 -0.09"
+        position="0 0 -0.11"
         width="4.6"
-        height="3.3"
+        height={outerHeight}
         color="#E5E7EB"
+      ></a-plane>
+
+      {/* Main card */}
+      <a-plane
+        position="0 0 -0.1"
+        width="4.4"
+        height={mainHeight}
+        color="#FFFFFF"
+        opacity="0.98"
+        material="shader: flat"
+        animation="property: scale; from: 0.92 0.92 0.92; to: 1 1 1; dur: 250"
       ></a-plane>
 
       {!showResult ? (
         <>
           {/* Header */}
-          <a-text
-            value={`Quiz Pos ${posId}`}
-            position="-2 1.4 0"
-            color="#1F2937"
-            width="7"
-            align="left"
-          ></a-text>
-
-          <a-text
-            value={`${currentQuestion + 1}/${questions.length}`}
-            position="2 1.4 0"
-            color="#6B7280"
-            width="5"
-            align="right"
-          ></a-text>
-
-          {/* Close Button */}
-          <a-circle
-            position="1.8 1.1 0.01"
-            radius="0.12"
-            color="#EF4444"
-            class="clickable"
-            onClick={onClose}
-          >
+          <a-entity position={`0 ${headerY} 0.02`}>
+            {/* Title */}
             <a-text
-              value="×"
-              position="0 0 0.01"
-              color="white"
-              width="10"
-              align="center"
+              value={`Quiz Pos ${posId}`}
+              position="-2.0 0.18 0"
+              color="#0F172A"
+              width="5"
+              align="left"
             ></a-text>
-          </a-circle>
+            {/* Counter */}
+            <a-text
+              value={`${currentQuestion + 1}/${questions.length}`}
+              position="2.0 0.18 0"
+              color="#6B7280"
+              width="5"
+              align="right"
+            ></a-text>
+            {/* Close Button */}
+            <a-entity position="2.0 -0.06 0.02">
+              <a-circle
+                radius="0.12"
+                color="#EF4444"
+                class="clickable"
+                onClick={onClose}
+              ></a-circle>
+              <a-text
+                value="×"
+                position="0 0 0.03"
+                color="#ffffff"
+                width="10"
+                align="center"
+              ></a-text>
+            </a-entity>
+            {/* Progress bar */}
+            <a-plane position={`0 -0.34 0.01`} width={CARD_INNER_WIDTH} height="0.08" color="#EEF2FF"></a-plane>
+            <a-plane position={`${-(CARD_INNER_WIDTH/2) + (progress * CARD_INNER_WIDTH) / 2} -0.34 0.02`} width={Math.max(0.02, progress * CARD_INNER_WIDTH)} height="0.08" color="#3B82F6"></a-plane>
+          </a-entity>
 
-          {/* Progress Bar */}
-          <a-plane
-            position="0 0.85 0.01"
-            width="4"
-            height="0.08"
-            color="#F3F4F6"
-          ></a-plane>
-
-          <a-plane
-            position={`${-2 + (((currentQuestion + 1) / questions.length) * 4) / 2} 0.85 0.02`}
-            width={((currentQuestion + 1) / questions.length) * 4}
-            height="0.08"
-            color="#3B82F6"
-          ></a-plane>
+          {/* Divider */}
+          <a-plane position={`0 ${dividerY} 0.01`} width={CARD_INNER_WIDTH} height="0.01" color="#E5E7EB"></a-plane>
 
           {/* Question */}
           <a-text
             value={question?.question || "Loading..."}
-            position="-2 0.3 0"
-            color="#1F2937"
-            width="5.5"
-            wrap-count="35"
+            position={`${-(CARD_INNER_WIDTH/2)} ${questionTopY} 0.02`}
+            color="#111827"
+            width={CARD_INNER_WIDTH}
+            wrap-count={WRAP_COUNT}
+            align="left"
+            baseline="top"
           ></a-text>
 
           {/* Answer Options */}
           {question?.type === "true_false" ? (
             <>
               {/* True Option */}
-              <a-plane
-                position="-1 -0.3 0.01"
-                width="1.8"
-                height="0.4"
-                color={selectedAnswer === 0 ? "#DBEAFE" : "#F9FAFB"}
-                class="clickable"
-                onClick={() => handleAnswerSelect(0)}
-              >
+              {/* Arrange vertically for consistency */}
+              {/* TRUE */}
+              <a-entity position={`0 ${optionsStartY} 0.02`} class="clickable" onClick={() => handleAnswerSelect(0)}>
+                <a-plane
+                  position="0 0 0"
+                  width={CARD_INNER_WIDTH}
+                  height={OPTION_HEIGHT}
+                  color={selectedAnswer === 0 ? "#DBEAFE" : "#F9FAFB"}
+                ></a-plane>
                 <a-plane
                   position="0 0 -0.01"
-                  width="1.85"
-                  height="0.45"
+                  width={CARD_INNER_WIDTH - 0.04}
+                  height={OPTION_HEIGHT + 0.04}
                   color={selectedAnswer === 0 ? "#3B82F6" : "#E5E7EB"}
                 ></a-plane>
-                <a-text
-                  value="True"
-                  position="0 0 0.01"
-                  color={selectedAnswer === 0 ? "#FFFFFF" : "#374151"}
-                  width="5"
-                  align="center"
-                ></a-text>
-              </a-plane>
-
-              {/* False Option */}
-              <a-plane
-                position="1 -0.3 0.01"
-                width="1.8"
-                height="0.4"
-                color={selectedAnswer === 1 ? "#DBEAFE" : "#F9FAFB"}
-                class="clickable"
-                onClick={() => handleAnswerSelect(1)}
-              >
+                <a-circle position={`${-(CARD_INNER_WIDTH/2) + 0.2} 0 0.02`} radius="0.09" color={selectedAnswer === 0 ? "#2563EB" : "#9CA3AF"}></a-circle>
+                <a-text value="True" position={`${-(CARD_INNER_WIDTH/2) + 0.45} 0 0.02`} color={selectedAnswer === 0 ? "#FFFFFF" : "#374151"} width={CARD_INNER_WIDTH - 0.8} align="left" wrap-count="28"></a-text>
+              </a-entity>
+              {/* FALSE */}
+              <a-entity position={`0 ${optionsStartY - OPTION_GAP} 0.02`} class="clickable" onClick={() => handleAnswerSelect(1)}>
+                <a-plane
+                  position="0 0 0"
+                  width={CARD_INNER_WIDTH}
+                  height={OPTION_HEIGHT}
+                  color={selectedAnswer === 1 ? "#DBEAFE" : "#F9FAFB"}
+                ></a-plane>
                 <a-plane
                   position="0 0 -0.01"
-                  width="1.85"
-                  height="0.45"
+                  width={CARD_INNER_WIDTH - 0.04}
+                  height={OPTION_HEIGHT + 0.04}
                   color={selectedAnswer === 1 ? "#3B82F6" : "#E5E7EB"}
                 ></a-plane>
-                <a-text
-                  value="False"
-                  position="0 0 0.01"
-                  color={selectedAnswer === 1 ? "#FFFFFF" : "#374151"}
-                  width="5"
-                  align="center"
-                ></a-text>
-              </a-plane>
+                <a-circle position={`${-(CARD_INNER_WIDTH/2) + 0.2} 0 0.02`} radius="0.09" color={selectedAnswer === 1 ? "#2563EB" : "#9CA3AF"}></a-circle>
+                <a-text value="False" position={`${-(CARD_INNER_WIDTH/2) + 0.45} 0 0.02`} color={selectedAnswer === 1 ? "#FFFFFF" : "#374151"} width={CARD_INNER_WIDTH - 0.8} align="left" wrap-count="28"></a-text>
+              </a-entity>
             </>
           ) : (
-            (question?.options || []).map((option, index) => (
-              <a-plane
-                key={index}
-                position={`0 ${0.1 - (index * 0.25)} 0.01`}
-                width="4"
-                height="0.22"
-                color={selectedAnswer === index ? "#DBEAFE" : "#F9FAFB"}
-                class="clickable"
-                onClick={() => handleAnswerSelect(index)}
-              >
-                <a-plane
-                  position="0 0 -0.01"
-                  width="4.05"
-                  height="0.27"
-                  color={selectedAnswer === index ? "#3B82F6" : "#E5E7EB"}
-                ></a-plane>
-                <a-text
-                  value={option}
-                  position="-1.8 0 0.01"
-                  color={selectedAnswer === index ? "#FFFFFF" : "#374151"}
-                  width="5"
-                  wrap-count="30"
-                ></a-text>
-              </a-plane>
-            ))
+            (question?.options || []).map((option, index) => {
+              const y = optionsStartY - index * OPTION_GAP; // start under question, spaced evenly
+              const isSel = selectedAnswer === index;
+              const letter = String.fromCharCode(65 + index);
+              return (
+                <a-entity key={index} position={`0 ${y} 0.02`} class="clickable" onClick={() => handleAnswerSelect(index)}>
+                  <a-plane position="0 0 0" width={CARD_INNER_WIDTH} height={OPTION_HEIGHT} color={isSel ? "#DBEAFE" : "#F9FAFB"}></a-plane>
+                  <a-plane position="0 0 -0.01" width={CARD_INNER_WIDTH - 0.04} height={OPTION_HEIGHT + 0.04} color={isSel ? "#3B82F6" : "#E5E7EB"}></a-plane>
+                  <a-circle position={`${-(CARD_INNER_WIDTH/2) + 0.2} 0 0.02`} radius="0.1" color={isSel ? "#2563EB" : "#9CA3AF"}></a-circle>
+                  <a-text value={letter} position={`${-(CARD_INNER_WIDTH/2) + 0.2} 0 0.03`} color="#FFFFFF" width="6" align="center"></a-text>
+                  <a-text value={option} position={`${-(CARD_INNER_WIDTH/2) + 0.45} 0 0.02`} color={isSel ? "#FFFFFF" : "#374151"} width={CARD_INNER_WIDTH - 0.8} wrap-count="32" align="left"></a-text>
+                </a-entity>
+              );
+            })
           )}
 
           {/* Navigation Buttons */}
-          <a-plane
-            position="-1.2 -1.3 0.01"
-            width="1.2"
-            height="0.3"
-            color="#6B7280"
-            class="clickable"
-            onClick={onClose}
-          >
-            <a-text
-              value="Cancel"
-              position="0 0 0.01"
-              color="white"
-              width="5"
-              align="center"
-            ></a-text>
-          </a-plane>
-
-          <a-plane
-            position="1.2 -1.3 0.01"
-            width="1.2"
-            height="0.3"
-            color={selectedAnswer !== null ? "#3B82F6" : "#9CA3AF"}
-            class="clickable"
-            onClick={selectedAnswer !== null ? handleNextQuestion : undefined}
-          >
-            <a-text
-              value={currentQuestion < questions.length - 1 ? "Next" : "Finish"}
-              position="0 0 0.01"
-              color="white"
-              width="5"
-              align="center"
-            ></a-text>
-          </a-plane>
+          <a-entity position={`0 ${buttonsY} 0.02`}>
+            {/* Cancel */}
+            <a-entity position="-1.25 0 0" class="clickable" onClick={onClose}>
+              <a-plane position="0 0 0" width="1.4" height="0.32" color="#E5E7EB"></a-plane>
+              <a-plane position="0 0 -0.01" width="1.44" height="0.36" color="#9CA3AF"></a-plane>
+              <a-text value="Cancel" position="0 0 0.02" color="#FFFFFF" width="5" align="center"></a-text>
+            </a-entity>
+            {/* Next / Finish */}
+            <a-entity
+              position="1.25 0 0"
+              class={selectedAnswer !== null ? "clickable" : ""}
+              onClick={selectedAnswer !== null ? handleNextQuestion : undefined}
+            >
+              <a-plane position="0 0 0" width="1.6" height="0.32" color={selectedAnswer !== null ? "#3B82F6" : "#D1D5DB"}></a-plane>
+              <a-plane position="0 0 -0.01" width="1.64" height="0.36" color={selectedAnswer !== null ? "#2563EB" : "#9CA3AF"}></a-plane>
+              <a-text
+                value={currentQuestion < questions.length - 1 ? "Next" : "Finish"}
+                position="0 0 0.02"
+                color="#FFFFFF"
+                width="6"
+                align="center"
+              ></a-text>
+            </a-entity>
+          </a-entity>
         </>
       ) : (
         /* Results */
@@ -327,22 +345,11 @@ export default function VRQuizCard({ isOpen, onClose, posId, position = "0 2 -4"
             align="center"
           ></a-text>
 
-          <a-plane
-            position="0 -0.9 0.01"
-            width="2"
-            height="0.4"
-            color="#3B82F6"
-            class="clickable"
-            onClick={handleCloseQuiz}
-          >
-            <a-text
-              value="Continue"
-              position="0 0 0.01"
-              color="white"
-              width="5"
-              align="center"
-            ></a-text>
-          </a-plane>
+          <a-entity position="0 -0.9 0.01" class="clickable" onClick={handleCloseQuiz}>
+            <a-plane position="0 0 0" width="2.2" height="0.42" color="#3B82F6"></a-plane>
+            <a-plane position="0 0 -0.01" width="2.25" height="0.46" color="#2563EB"></a-plane>
+            <a-text value="Continue" position="0 0 0.02" color="#FFFFFF" width="6" align="center"></a-text>
+          </a-entity>
         </>
       )}
     </a-entity>
