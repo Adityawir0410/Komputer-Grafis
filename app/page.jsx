@@ -1,32 +1,74 @@
 "use client";
-import Image from "next/image";
-import Link from "next/link";
+import { useState } from "react";
+import { useAuth } from "./_context/AuthContext";
+import LoginModal from "./_components/LoginModal";
+import ProfileModal from "./_components/ProfileModal";
+import Sidebar from "./_components/Sidebar";
+import MainContent from "./_components/MainContent";
 
 export default function Home() {
-  const handleStartTour = () => {
-    // Only clear data when explicitly starting a new tour
-    localStorage.removeItem('tour_start_time');
-    localStorage.removeItem('tour_total_score');
-    localStorage.removeItem('tour_quiz_completed');
-    localStorage.removeItem('tour_completed');
-    localStorage.removeItem('tour_final_time');
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [showProfileModal, setShowProfileModal] = useState(false);
+  const { isAuthenticated } = useAuth();
+
+  const handleLoginClick = () => {
+    setShowLoginModal(true);
+  };
+
+  const handleProfileClick = () => {
+    setShowProfileModal(true);
+  };
+
+  const handleLoginSuccess = () => {
+    setShowLoginModal(false);
+  };
+
+  const handleProfileConfirm = () => {
+    setShowProfileModal(false);
+    // Auto redirect to tour after profile confirmation
+    setTimeout(() => {
+      window.location.href = '/tour/briefing';
+    }, 500);
   };
 
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image className="dark:invert" src="/next.svg" alt="Next.js" width={180} height={38} priority />
-        <h1 className="font-bold text-xl">Virtual Wastewater Treatment Plant</h1>
-        <p className="mb-6 text-center">Explore the process in VR</p>
+    <>
+      {/* Main Container with background similar to SIER */}
+      <div className="min-h-screen relative" style={{
+        backgroundImage: 'url(/images/ipal-background.jpg)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundAttachment: 'fixed'
+      }}>
+        {/* Overlay */}
+        <div className="absolute inset-0 bg-black bg-opacity-40"></div>
+        
+        {/* Content Container */}
+        <div className="relative z-10 min-h-screen flex">
+          {/* Sidebar Component */}
+          <Sidebar 
+            onLoginClick={handleLoginClick}
+            onProfileClick={handleProfileClick}
+          />
 
-        <Link
-          href="/tour/briefing"
-          onClick={handleStartTour}
-          className="rounded-full bg-blue-600 text-white px-6 py-3 hover:bg-blue-700 transition-colors"
-        >
-          Start Tour
-        </Link>
-      </main>
-    </div>
+          {/* Main Content Component */}
+          <MainContent />
+        </div>
+      </div>
+
+      {/* Profile Modal */}
+      <ProfileModal
+        isOpen={showProfileModal}
+        onClose={() => setShowProfileModal(false)}
+        onConfirm={handleProfileConfirm}
+      />
+
+      {/* Login Modal */}
+      <LoginModal
+        isOpen={showLoginModal}
+        onClose={() => setShowLoginModal(false)}
+        onSuccess={handleLoginSuccess}
+      />
+    </>
   );
 }
