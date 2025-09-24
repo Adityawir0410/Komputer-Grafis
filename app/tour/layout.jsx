@@ -1,8 +1,10 @@
 "use client";
 import { TourProvider } from './_context/TourContext';
 import HUD from './_components/HUD';
+import ProtectedRoute from '../_components/ProtectedRoute';
 import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
+import PropTypes from 'prop-types';
 
 export default function TourLayout({ children }) {
   const [isVRPage, setIsVRPage] = useState(false);
@@ -18,13 +20,19 @@ export default function TourLayout({ children }) {
   }, [pathname]);
 
   return (
-    <TourProvider>
-      <div className="relative min-h-screen bg-gray-100">
-        {/* Global HUD for VR pages */}
-        {isVRPage && <HUD />}
-        
-        {children}
-      </div>
-    </TourProvider>
+    <ProtectedRoute>
+      <TourProvider>
+        <div className="relative min-h-screen bg-gray-100">
+          {/* Global HUD for VR pages */}
+          {isVRPage && <HUD />}
+          
+          {children}
+        </div>
+      </TourProvider>
+    </ProtectedRoute>
   );
 }
+
+TourLayout.propTypes = {
+  children: PropTypes.node.isRequired,
+};
