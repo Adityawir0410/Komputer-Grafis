@@ -13,6 +13,7 @@ export function TourProvider({ children }) {
   const [tourCompleted, setTourCompleted] = useState(false);
   const [timerFrozen, setTimerFrozen] = useState(false);
   const [timerStarted, setTimerStarted] = useState(false);
+  const [finishButtonClicked, setFinishButtonClicked] = useState(false);
   const maxPos = 7; // Updated to 7 positions
   const quizPositions = [2, 3, 5]; // Quiz positions: Pos 2, 3, and 5
 
@@ -21,13 +22,15 @@ export function TourProvider({ children }) {
     const initializeData = () => {
       const savedTourCompleted = localStorage.getItem('tour_completed');
       const savedFinalTime = localStorage.getItem('tour_final_time');
+      const savedFinishClicked = localStorage.getItem('finish_button_clicked');
       const startTime = localStorage.getItem('tour_start_time');
       
       // Check if tour was already completed
-      if (savedTourCompleted === 'true') {
+      if (savedTourCompleted === 'true' && savedFinishClicked === 'true') {
         setTourCompleted(true);
         setTimerFrozen(true);
         setTimerStarted(true);
+        setFinishButtonClicked(true);
         if (savedFinalTime) {
           setTimeRemaining(parseInt(savedFinalTime));
         }
@@ -40,12 +43,14 @@ export function TourProvider({ children }) {
         setTimerStarted(true);
         setTimerFrozen(false);
         setTourCompleted(false);
+        setFinishButtonClicked(false);
       } else {
         // Timer not started yet
         setTimeRemaining(600);
         setTimerStarted(false);
         setTimerFrozen(false);
         setTourCompleted(false);
+        setFinishButtonClicked(false);
       }
 
       // Load other saved data
@@ -83,7 +88,7 @@ export function TourProvider({ children }) {
 
   // Timer countdown - only run if started, not frozen, and not completed
   useEffect(() => {
-    if (!isInitialized || !timerStarted || timeRemaining <= 0 || timerFrozen || tourCompleted) {
+    if (!isInitialized || !timerStarted || timeRemaining <= 0 || timerFrozen || finishButtonClicked) {
       return;
     }
 
@@ -95,7 +100,7 @@ export function TourProvider({ children }) {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [timeRemaining, isInitialized, timerStarted, timerFrozen, tourCompleted]);
+  }, [timeRemaining, isInitialized, timerStarted, timerFrozen, finishButtonClicked]);
 
   // Save data to localStorage
   useEffect(() => {
@@ -108,9 +113,9 @@ export function TourProvider({ children }) {
     localStorage.setItem('tour_quiz_completed', JSON.stringify(quizCompleted));
   }, [quizCompleted, isInitialized]);
 
-  // Check if tour is completed - only check quiz positions
+  // Check if all quizzes are completed (but don't stop timer yet)
   useEffect(() => {
-    if (!isInitialized || tourCompleted) return;
+    if (!isInitialized || finishButtonClicked) return;
     
     const allQuizzesComplete = quizPositions.every(pos => quizCompleted[pos]);
     const completedQuizCount = quizPositions.filter(pos => quizCompleted[pos]).length;
@@ -122,16 +127,13 @@ export function TourProvider({ children }) {
       quizCompleted 
     });
     
+    // Only mark tour as ready to complete, but don't stop timer yet
     if (allQuizzesComplete && completedQuizCount === quizPositions.length) {
-      console.log('All quizzes completed, freezing timer at:', timeRemaining);
-      
+      console.log('All quizzes completed, tour ready to finish but timer still running');
       setTourCompleted(true);
-      setTimerFrozen(true);
-      
       localStorage.setItem('tour_completed', 'true');
-      localStorage.setItem('tour_final_time', timeRemaining.toString());
     }
-  }, [quizCompleted, isInitialized, timeRemaining, tourCompleted, quizPositions]);
+  }, [quizCompleted, isInitialized, finishButtonClicked, quizPositions]);
 
   const completeQuiz = (posId, score) => {
     console.log(`Completing quiz for pos ${posId} with score ${score}`);
@@ -145,17 +147,9 @@ export function TourProvider({ children }) {
     setTotalScore(prev => prev + score);
     setSceneScore(score);
     
-    // Check if all required quizzes are completed
+    // Just log completion, don't stop timer here
     const completedRequiredQuizzes = quizPositions.filter(pos => newQuizCompleted[pos]).length;
     console.log('Completed required quizzes:', completedRequiredQuizzes, 'of', quizPositions.length);
-    
-    if (completedRequiredQuizzes === quizPositions.length) {
-      console.log('All required quizzes completed! Freezing timer.');
-      setTourCompleted(true);
-      setTimerFrozen(true);
-      localStorage.setItem('tour_completed', 'true');
-      localStorage.setItem('tour_final_time', timeRemaining.toString());
-    }
   };
 
   const resetTour = () => {
@@ -164,6 +158,7 @@ export function TourProvider({ children }) {
     localStorage.removeItem('tour_quiz_completed');
     localStorage.removeItem('tour_completed');
     localStorage.removeItem('tour_final_time');
+    localStorage.removeItem('finish_button_clicked');
     
     setCurrentPos(1);
     setSceneScore(0);
@@ -173,6 +168,16 @@ export function TourProvider({ children }) {
     setTourCompleted(false);
     setTimerFrozen(false);
     setTimerStarted(false);
+    setFinishButtonClicked(false);
+  };
+
+  // New function to handle finish button click
+  const handleFinishTour = () => {
+    console.log('Finish button clicked, stopping timer at:', timeRemaining);
+    setFinishButtonClicked(true);
+    setTimerFrozen(true);
+    localStorage.setItem('finish_button_clicked', 'true');
+    localStorage.setItem('tour_final_time', timeRemaining.toString());
   };
 
   const completeTourAndReset = () => {
@@ -199,12 +204,14 @@ export function TourProvider({ children }) {
     tourCompleted,
     timerFrozen,
     timerStarted,
+    finishButtonClicked,
     maxPos,
     quizPositions,
     completeQuiz,
     resetTour,
     completeTourAndReset,
     startTimer,
+    handleFinishTour,
     formatTime,
     isInitialized
   };

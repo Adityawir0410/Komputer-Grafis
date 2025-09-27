@@ -15,7 +15,8 @@ export default function HUD() {
     tourCompleted,
     timerStarted,
     quizPositions,
-    quizCompleted
+    quizCompleted,
+    finishButtonClicked
   } = useTour();
 
   // Don't render until context is properly initialized
@@ -40,11 +41,14 @@ export default function HUD() {
             </div>
             <div>
               <p className="text-xs text-gray-300">
-                {!timerStarted ? 'Time (Not Started)' : 'Time'}
+                {!timerStarted ? 'Time (Not Started)' : 
+                 finishButtonClicked ? 'Time (Finished)' : 'Time'}
                 {!timerStarted && <span className="text-gray-400 ml-1">⏸</span>}
+                {finishButtonClicked && <span className="text-orange-400 ml-1">🏁</span>}
               </p>
               <p className={`text-xl font-bold ${
                 !timerStarted ? 'text-gray-400' :
+                finishButtonClicked ? 'text-orange-400' : 
                 timerFrozen ? 'text-orange-400' : 'text-blue-400'
               }`}>
                 {formatTime(timeRemaining)}
@@ -52,6 +56,9 @@ export default function HUD() {
               {!timerStarted && (
                 <p className="text-xs text-gray-400 mt-1">Reach Pos 1 to start</p>
               )}
+              {/* {finishButtonClicked && (
+                <p className="text-xs text-orange-300 mt-1">Tour finished!</p>
+              )} */}
             </div>
           </div>
         </div>

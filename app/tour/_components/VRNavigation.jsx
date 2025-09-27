@@ -4,7 +4,7 @@ import { useTour } from '../_context/TourContext';
 
 export default function VRNavigation({ currentPosId, maxPos }) {
   const router = useRouter();
-  const { quizCompleted, quizPositions } = useTour();
+  const { quizCompleted, quizPositions, handleFinishTour } = useTour();
 
   const goToPrevious = () => {
     if (currentPosId > 1) {
@@ -19,6 +19,9 @@ export default function VRNavigation({ currentPosId, maxPos }) {
   };
 
   const goToFinish = () => {
+    // Stop the timer first before navigating
+    handleFinishTour();
+    // Then navigate to closing page
     router.push('/tour/closing');
   };
 
