@@ -1,11 +1,56 @@
-// app/tour/(flow)/closing/page.jsx
 "use client";
 import Link from "next/link";
 import { useTour } from "../../_context/TourContext";
-import { useEffect } from "react";
+import { useAuth } from "../../../_context/AuthContext";
+import { useEffect, useState, useRef } from "react"; // 1. Import useRef
 
 export default function ClosingPage() {
   const { totalScore, completeTourAndReset, formatTime, timeRemaining } = useTour();
+  const { user } = useAuth();
+  const [saveStatus, setSaveStatus] = useState('pending');
+  
+  // 2. Buat useRef sebagai penanda
+  const hasSaved = useRef(false); 
+
+  useEffect(() => {
+    const saveResult = async () => {
+      // 3. Tambahkan kondisi untuk memeriksa penanda
+      if (user && !hasSaved.current) { 
+        // 4. Set penanda menjadi true agar tidak berjalan lagi
+        hasSaved.current = true; 
+        
+        setSaveStatus('saving');
+        try {
+          const response = await fetch('/api/tour/save-result', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              fullName: user.fullName,
+              nim: user.nim,
+              faculty: user.fakultas,
+              studyProgram: user.programStudi,
+              total_score: totalScore,
+              final_time_seconds: timeRemaining,
+            }),
+          });
+          
+          if (!response.ok) throw new Error('Gagal mengirim data');
+          
+          setSaveStatus('success');
+          console.log('Hasil berhasil disimpan!');
+
+        } catch (error) {
+          setSaveStatus('error');
+          console.error('Gagal menyimpan hasil:', error);
+        }
+      }
+    };
+
+    saveResult();
+    
+  // Hilangkan saveStatus dari dependency array agar tidak memicu eksekusi ulang
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user, totalScore, timeRemaining]);
 
   const handleReturnHome = () => {
     completeTourAndReset();
@@ -52,11 +97,13 @@ export default function ClosingPage() {
           Kembali ke Home
         </Link>
         
-        <p className="text-xs text-gray-500 mt-4">
-          * Data tour akan direset untuk pengalaman baru
-        </p>
+        <div className="text-xs text-gray-500 mt-4">
+          {saveStatus === 'saving' && <p>Menyimpan hasil Anda...</p>}
+          {saveStatus === 'success' && <p className="text-green-600">Hasil Anda telah disimpan.</p>}
+          {saveStatus === 'error' && <p className="text-red-600">Gagal menyimpan hasil.</p>}
+          <p className="mt-2">* Data tour akan direset untuk pengalaman baru</p>
+        </div>
       </div>
     </main>
   );
 }
-        
