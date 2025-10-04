@@ -12,6 +12,8 @@ export default function Pos6() {
 
   return (
     <>
+    {/* Background 360 untuk Pos 6 */}
+  <a-sky src="/images/360/pos6-360.jpg" rotation="0 0 0" />
       {/* SFX: Pos 6 - Effluent Tank */}
       <audio
         src="/sounds/sfx_7_Effluent Tank.MP3"

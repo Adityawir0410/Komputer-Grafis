@@ -15,6 +15,19 @@ export default function Pos2() {
 
   return (
     <>
+    {/* Background 360 untuk Pos 2 */}
+      <a-sky src="/images/360/pos2-360.jpg" rotation="0 -90 0" />
+
+      {/* Welcome Text dengan background (seperti Pos 1) */}
+      <a-plane position="0 3 -3.05" width="6.5" height="1.1" color="#fff" opacity="0.75" material="side: double; transparent: true" />
+      <a-text 
+        value={"Selamat datang di Pos 2!\nSilakan eksplorasi area ini dan lanjutkan tour VR."}
+        position="0 3 -3" 
+        align="center" 
+        color="#1F2937"
+        width="6"
+        side="double"
+      ></a-text>
       {/* SFX: Pos 2 - Settling Tank */}
       <audio
         src="/sounds/sfx_3_Settling Tank.MP3"

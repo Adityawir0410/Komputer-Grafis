@@ -14,6 +14,8 @@ export default function Pos5() {
 
   return (
     <>
+    {/* Background 360 untuk Pos 5 */}
+  <a-sky src="/images/360/pos5-360.jpg" rotation="0 0 0" />
       {/* SFX: Pos 5 - Secondary Clarifier */}
       <audio
         src="/sounds/sfx_6_Secondary Clarifier.MP3"

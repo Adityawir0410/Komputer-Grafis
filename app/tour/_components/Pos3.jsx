@@ -15,6 +15,8 @@ export default function Pos3() {
 
   return (
     <>
+    {/* Background 360 untuk Pos 3 */}
+  <a-sky src="/images/360/pos3-360.jpg" rotation="0 -120 0" />
       {/* SFX: Pos 3 - Oxidation Ditch */}
       <audio
         src="/sounds/sfx_4_Oxidation Ditch.MP3"
@@ -22,54 +24,19 @@ export default function Pos3() {
         preload="auto"
         playsInline
       />
-      {/* Main Pos 3 Box */}
+
+
+      {/* Title Wrapper like Pos1 */}
       <a-box 
-        position="0 1 -5" 
-        rotation="0 45 0" 
-        color="#DC2626"
-        animation="property: rotation; to: 0 405 0; loop: true; dur: 10000"
-        shadow="cast: true"
-      >
-        <a-text 
-          value="POS 3" 
-          position="0 1 0.6" 
-          align="center" 
-          color="white"
-          width="4"
-        ></a-text>
-      </a-box>
-
-      {/* Victory Cone */}
-      <a-cone 
-        position="0 1 -6" 
-        radius-bottom="0.8" 
-        height="1.5" 
-        color="#F59E0B"
-        animation="property: scale; to: 1.2 1.2 1.2; dir: alternate; loop: true; dur: 1500"
-        shadow="cast: true"
-      ></a-cone>
-
-      {/* Interactive Dodecahedron */}
-      <a-dodecahedron 
-        position="-3 1 -4" 
-        radius="0.6" 
-        color="#EC4899"
-        animation="property: rotation; to: 360 360 0; loop: true; dur: 6000"
-        shadow="cast: true"
-      ></a-dodecahedron>
-
-      {/* Interactive Icosahedron */}
-      <a-icosahedron 
-        position="3 1 -4" 
-        radius="0.5" 
-        color="#06B6D4"
-        animation="property: position; to: 3 2.5 -4; dir: alternate; loop: true; dur: 1800"
-        shadow="cast: true"
-      ></a-icosahedron>
-
-      {/* Updated text - no longer final destination */}
+        position="0 3 -3.1" 
+        width="3.5" 
+        height="1.2" 
+        depth="0.15" 
+        color="#F3F4F6" 
+        opacity="0.85" 
+      ></a-box>
       <a-text 
-        value="Pos 3: Oxidation Ditch\nComplete the quiz to continue!" 
+        value="POS 3\nOxidation Ditch" 
         position="0 3 -3" 
         align="center" 
         color="#1F2937"
@@ -102,17 +69,7 @@ export default function Pos3() {
         width="4"
       ></a-text>
 
-      {/* Show instruction to complete quiz if not done */}
-      {!quizCompleted[3] && (
-        <a-text 
-          value="Complete the quiz to proceed to next position!" 
-          position="0 1.5 -3" 
-          align="center" 
-          color="#DC2626"
-          width="5"
-          animation="property: scale; to: 1.05 1.05 1.05; dir: alternate; loop: true; dur: 1500"
-        ></a-text>
-      )}
+
 
       {/* VR Quiz Card */}
       <VRQuizCard 

@@ -12,6 +12,8 @@ export default function Pos4() {
 
   return (
     <>
+    {/* Background 360 untuk Pos 4 */}
+  <a-sky src="/images/360/pos4-360.jpg" rotation="0 -80 0" />
       {/* SFX: Pos 4 - Sludge Distribution */}
       <audio
         src="/sounds/sfx_5_sludge Distribution.MP3"
@@ -36,23 +38,7 @@ export default function Pos4() {
         ></a-text>
       </a-box>
 
-      {/* Interactive Elements */}
-      <a-tetrahedron 
-        position="-3 1 -4" 
-        radius="0.6" 
-        color="#F59E0B"
-        animation="property: rotation; to: 360 0 360; loop: true; dur: 4000"
-        shadow="cast: true"
-      ></a-tetrahedron>
 
-      <a-ring 
-        position="3 1 -4" 
-        radius-inner="0.3"
-        radius-outer="0.7" 
-        color="#34D399"
-        animation="property: rotation; to: 0 360 0; loop: true; dur: 3000"
-        shadow="cast: true"
-      ></a-ring>
 
       <a-text 
         value="Pos 4: Intermediate Stage\nThis position has no quiz - continue exploring!" 
