@@ -12,8 +12,17 @@ export default function Pos6() {
 
   return (
     <>
-    {/* Background 360 untuk Pos 6 */}
-  <a-sky src="/images/360/pos6-360.jpg" rotation="0 0 0" />
+      {/* Background 360 untuk Pos 6 
+      
+        🛠️ PERBAIKAN DI SINI:
+        - Kita ubah rotation="0 0 0" menjadi "0 90 -5" (sebagai contoh).
+        - Nilai '90' (Y) akan membuat Anda menghadap ke arah yang berbeda saat mulai.
+        - Nilai '-5' (Z) akan memperbaiki sedikit kemiringan. Coba ubah nilai ini sampai lurus.
+      */}
+      <a-sky src="/images/360/pos6-360.jpg" rotation="-2 -80 30" />
+
+      {/* ... sisa kode Anda tidak berubah ... */}
+
       {/* SFX: Pos 6 - Effluent Tank */}
       <audio
         src="/sounds/sfx_7_Effluent Tank.MP3"

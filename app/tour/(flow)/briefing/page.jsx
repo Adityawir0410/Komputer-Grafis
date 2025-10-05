@@ -13,13 +13,8 @@ export default function BriefingPage() {
         playsInline
       />
       <MainScene>
-        {/* contoh objek 3D */}
-        <a-entity
-          geometry="primitive: box"
-          material="color: #4f46e5"
-          position="0 1.25 -3"
-          spin="speed: 0.5"
-        ></a-entity>
+        {/* 360 Background for Briefing */}
+  <a-sky src="/images/360/loby-ipal-sier-360.jpg" rotation="0 -80 0" />
 
         {/* Briefing text */}
         <a-text

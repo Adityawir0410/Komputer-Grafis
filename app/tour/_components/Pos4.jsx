@@ -12,8 +12,9 @@ export default function Pos4() {
 
   return (
     <>
-    {/* Background 360 untuk Pos 4 */}
-  <a-sky src="/images/360/pos4-360.jpg" rotation="0 -80 0" />
+      {/* Background 360 untuk Pos 4 */}
+      <a-sky src="/images/360/pos4-360.jpg" rotation="0 0 0" />
+      
       {/* SFX: Pos 4 - Sludge Distribution */}
       <audio
         src="/sounds/sfx_5_sludge Distribution.MP3"
@@ -21,39 +22,26 @@ export default function Pos4() {
         preload="auto"
         playsInline
       />
-      {/* Main Pos 4 Box */}
-      <a-box 
-        position="0 1 -5" 
-        rotation="0 45 0" 
-        color="#7C3AED"
-        animation="property: rotation; to: 0 405 0; loop: true; dur: 10000"
-        shadow="cast: true"
-      >
-        <a-text 
-          value="POS 4" 
-          position="0 1 0.6" 
-          align="center" 
-          color="white"
-          width="4"
-        ></a-text>
-      </a-box>
 
-
-
+      {/* ✅ PEMBUNGKUS JUDUL DISESUAIKAN DI SINI
+        - <a-box> diganti menjadi <a-plane> agar konsisten.
+        - Dimensinya disesuaikan agar pas dengan teks.
+      */}
+      <a-plane
+        position="0 3 -3.05"
+        width="5"
+        height="1.2"
+        color="#F3F4F6"
+        opacity="0.85"
+        material="side: double; transparent: true"
+      ></a-plane>
+      
       <a-text 
-        value="Pos 4: Intermediate Stage\nThis position has no quiz - continue exploring!" 
+        value="POS 4\nSludge Distribution" 
         position="0 3 -3" 
         align="center" 
         color="#1F2937"
         width="6"
-      ></a-text>
-
-      <a-text 
-        value="No quiz required here - proceed to the next position!" 
-        position="0 1.8 -3" 
-        align="center" 
-        color="#7C3AED"
-        width="5"
       ></a-text>
 
       <VRNavigation currentPosId={4} maxPos={7} />
