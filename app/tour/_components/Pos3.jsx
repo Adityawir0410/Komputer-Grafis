@@ -15,8 +15,9 @@ export default function Pos3() {
 
   return (
     <>
-    {/* Background 360 untuk Pos 3 */}
-  <a-sky src="/images/360/pos3-360.jpg" rotation="0 -120 0" />
+      {/* Background 360 untuk Pos 3 */}
+      <a-sky src="/images/360/pos3-360.jpg" rotation="0 -120 0" />
+      
       {/* SFX: Pos 3 - Oxidation Ditch */}
       <audio
         src="/sounds/sfx_4_Oxidation Ditch.MP3"
@@ -25,16 +26,16 @@ export default function Pos3() {
         playsInline
       />
 
-
-      {/* Title Wrapper like Pos1 */}
-      <a-box 
-        position="0 3 -3.1" 
-        width="3.5" 
-        height="1.2" 
-        depth="0.15" 
-        color="#F3F4F6" 
-        opacity="0.85" 
-      ></a-box>
+      {/* ✅ PEMBUNGKUS JUDUL DISESUAIKAN DI SINI */}
+      <a-plane
+        position="0 3 -3.05"
+        width="5"
+        height="1.2"
+        color="#F3F4F6"
+        opacity="0.85"
+        material="side: double; transparent: true"
+      ></a-plane>
+      
       <a-text 
         value="POS 3\nOxidation Ditch" 
         position="0 3 -3" 
@@ -43,7 +44,7 @@ export default function Pos3() {
         width="6"
       ></a-text>
 
-      {/* Quiz Circle in VR - This was missing! */}
+      {/* Quiz Circle in VR */}
       <a-circle
         position="4 2 -3"
         radius="0.4"
@@ -69,8 +70,6 @@ export default function Pos3() {
         width="4"
       ></a-text>
 
-
-
       {/* VR Quiz Card */}
       <VRQuizCard 
         isOpen={showQuiz}
@@ -79,26 +78,8 @@ export default function Pos3() {
         position="0 3.5 -3"
       />
 
-      {/* VR Navigation - Updated maxPos to 7 */}
+      {/* VR Navigation */}
       <VRNavigation currentPosId={3} maxPos={7} />
     </>
   );
 }
-//       {/* VR Navigation */}
-//       <VRNavigation currentPosId={3} maxPos={3} />
-
-//       {/* Completion message when all quizzes done */}
-//       {canFinishTour && (
-//         <a-text 
-//           value="All quizzes completed!\nLook right for the finish button." 
-//           position="0 2 -2" 
-//           align="center" 
-//           color="#10B981"
-//           width="6"
-//           animation="property: scale; to: 1.05 1.05 1.05; dir: alternate; loop: true; dur: 2000"
-//         ></a-text>
-//       )}
-//     </>
-//   );
-// }
-            
