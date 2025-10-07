@@ -14,6 +14,9 @@ export default function Pos5() {
 
   return (
     <>
+      {/* 360 Background for Pos 5 */}
+      <a-sky src="/images/360/pos5-360.jpg" rotation="18 149 20" />
+      
       {/* SFX: Pos 5 - Secondary Clarifier */}
       <audio
         src="/sounds/sfx_6_Secondary Clarifier.MP3"
@@ -21,82 +24,66 @@ export default function Pos5() {
         preload="auto"
         playsInline
       />
-      {/* Main Pos 5 Box */}
-      <a-box 
-        position="0 1 -5" 
-        rotation="0 45 0" 
-        color="#DB2777"
-        animation="property: rotation; to: 0 405 0; loop: true; dur: 10000"
-        shadow="cast: true"
-      >
+      
+      {/* Title wrapped in an entity for animation */}
+      <a-entity scale={showQuiz ? "0 0 0" : "1 1 1"}>
+        <a-animation attribute="scale" dur="300" ease="ease-in-out"></a-animation>
+        
+        {/* Title Wrapper */}
+        <a-plane 
+          position="0 3 -3.05" 
+          width="5.0" 
+          height="1.2" 
+          color="#F3F4F6" 
+          opacity="0.85" 
+          material="side: double; transparent: true" 
+        />
+
+        {/* Title Text */}
         <a-text 
-          value="POS 5" 
-          position="0 1 0.6" 
+          value="Pos 5\nSecondary Clarifier" 
+          position="0 3 -3" 
           align="center" 
-          color="white"
+          color="#1F2937"
+          width="6"
+        ></a-text>
+      </a-entity>
+
+      {/* Quiz Circle wrapped for positioning & rotation */}
+      <a-entity position="4 1.5 -3" rotation="-10 -45 0">
+        <a-circle
+          position="0 0.4 0"
+          radius="0.4"
+          color={quizCompleted[5] ? "#10B981" : "#3B82F6"}
+          className="clickable"
+          onClick={() => !quizCompleted[5] && setShowQuiz(true)}
+          animation={!quizCompleted[5] ? "property: scale; to: 1.1 1.1 1.1; dir: alternate; loop: true; dur: 1000" : ""}
+        >
+          <a-text
+            value={quizCompleted[5] ? "✓" : "?"}
+            position="0 0 0.01"
+            align="center"
+            color="white"
+            width="8"
+          ></a-text>
+        </a-circle>
+
+        <a-text
+          value="QUIZ"
+          position="0 -0.3 0"
+          align="center"
+          color="#1F2937"
           width="4"
         ></a-text>
-      </a-box>
+      </a-entity>
 
-      {/* Interactive Elements */}
-      <a-dodecahedron 
-        position="-3 1.5 -4" 
-        radius="0.5" 
-        color="#06B6D4"
-        animation="property: position; to: -3 2.5 -4; dir: alternate; loop: true; dur: 2000"
-        shadow="cast: true"
-      ></a-dodecahedron>
-
-      <a-capsule 
-        position="3 1 -4" 
-        radius="0.3"
-        height="1.2" 
-        color="#F59E0B"
-        animation="property: rotation; to: 0 0 360; loop: true; dur: 5000"
-        shadow="cast: true"
-      ></a-capsule>
-
-      <a-text 
-        value="Pos 5: Secondary Clarifier Stage\nComplete the quiz to proceed!" 
-        position="0 3 -3" 
-        align="center" 
-        color="#1F2937"
-        width="6"
-      ></a-text>
-
-      {/* Quiz Circle in VR */}
-      <a-circle
-        position="4 2 -3"
-        radius="0.4"
-        color={quizCompleted[5] ? "#10B981" : "#3B82F6"}
-        class="clickable"
-        onClick={() => !quizCompleted[5] && setShowQuiz(true)}
-        animation={!quizCompleted[5] ? "property: scale; to: 1.1 1.1 1.1; dir: alternate; loop: true; dur: 1000" : ""}
-      >
-        <a-text
-          value={quizCompleted[5] ? "✓" : "?"}
-          position="0 0 0.01"
-          align="center"
-          color="white"
-          width="8"
-        ></a-text>
-      </a-circle>
-
-      <a-text
-        value="QUIZ"
-        position="4 1.3 -3"
-        align="center"
-        color="#1F2937"
-        width="4"
-      ></a-text>
-
+      {/* Quiz Card and Navigation Components */}
       <VRQuizCard 
         isOpen={showQuiz}
         onClose={() => setShowQuiz(false)}
         posId={5}
         position="0 3.5 -3"
       />
-
       <VRNavigation currentPosId={5} maxPos={7} />
     </>
   );

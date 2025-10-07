@@ -76,7 +76,7 @@ export default function VRNavigation({ currentPosId, maxPos }) {
 
       {/* Right Navigation Button (Next or Finish) */}
       {(canGoNext || canFinish) && (
-        <a-entity position="1.5 0.8 0.5">
+        <a-entity position="1.5 0.1 0.5">
           <a-cylinder
             position="0 0 0"
             radius="0.25"

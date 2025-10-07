@@ -12,6 +12,10 @@ export default function Pos4() {
 
   return (
     <>
+      {/* Background 360 untuk Pos 4 */}
+      {/* ✅ Rotasi diubah agar menoleh ke kiri */}
+      <a-sky src="/images/360/pos4-360.jpg" rotation="0 -90 0" />
+      
       {/* SFX: Pos 4 - Sludge Distribution */}
       <audio
         src="/sounds/sfx_5_sludge Distribution.MP3"
@@ -19,55 +23,23 @@ export default function Pos4() {
         preload="auto"
         playsInline
       />
-      {/* Main Pos 4 Box */}
-      <a-box 
-        position="0 1 -5" 
-        rotation="0 45 0" 
-        color="#7C3AED"
-        animation="property: rotation; to: 0 405 0; loop: true; dur: 10000"
-        shadow="cast: true"
-      >
-        <a-text 
-          value="POS 4" 
-          position="0 1 0.6" 
-          align="center" 
-          color="white"
-          width="4"
-        ></a-text>
-      </a-box>
 
-      {/* Interactive Elements */}
-      <a-tetrahedron 
-        position="-3 1 -4" 
-        radius="0.6" 
-        color="#F59E0B"
-        animation="property: rotation; to: 360 0 360; loop: true; dur: 4000"
-        shadow="cast: true"
-      ></a-tetrahedron>
-
-      <a-ring 
-        position="3 1 -4" 
-        radius-inner="0.3"
-        radius-outer="0.7" 
-        color="#34D399"
-        animation="property: rotation; to: 0 360 0; loop: true; dur: 3000"
-        shadow="cast: true"
-      ></a-ring>
-
+      {/* Wrapper untuk Judul */}
+      <a-plane
+        position="0 3 -3.05"
+        width="5"
+        height="1.2"
+        color="#F3F4F6"
+        opacity="0.85"
+        material="side: double; transparent: true"
+      ></a-plane>
+      
       <a-text 
-        value="Pos 4: Intermediate Stage\nThis position has no quiz - continue exploring!" 
+        value="POS 4\nSludge Distribution" 
         position="0 3 -3" 
         align="center" 
         color="#1F2937"
         width="6"
-      ></a-text>
-
-      <a-text 
-        value="No quiz required here - proceed to the next position!" 
-        position="0 1.8 -3" 
-        align="center" 
-        color="#7C3AED"
-        width="5"
       ></a-text>
 
       <VRNavigation currentPosId={4} maxPos={7} />

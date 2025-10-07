@@ -14,7 +14,7 @@ export function TourProvider({ children }) {
   const [timerFrozen, setTimerFrozen] = useState(false);
   const [timerStarted, setTimerStarted] = useState(false);
   const [finishButtonClicked, setFinishButtonClicked] = useState(false);
-  const maxPos = 7; // Updated to 7 positions
+  const maxPos = 6; // Updated to 7 positions
   const quizPositions = [2, 3, 5]; // Quiz positions: Pos 2, 3, and 5
 
   // Initialize data without starting timer
