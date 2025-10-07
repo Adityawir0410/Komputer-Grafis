@@ -1,3 +1,5 @@
+// File: app/tour/_components/Pos3.jsx
+
 "use client";
 import { useState, useEffect } from 'react';
 import { useTour } from '../_context/TourContext';
@@ -6,11 +8,18 @@ import VRNavigation from './VRNavigation';
 
 export default function Pos3() {
   const [showQuiz, setShowQuiz] = useState(false);
-  const { setCurrentPos, quizCompleted } = useTour();
+  // ✅ Ambil fungsi clearAudioTimer
+  const { setCurrentPos, quizCompleted, startAudioTimer, clearAudioTimer } = useTour();
 
   useEffect(() => {
     setCurrentPos(3);
-  }, [setCurrentPos]);
+    startAudioTimer(34); // Durasi untuk Pos 3
+    
+    // ✅ TAMBAHKAN CLEANUP FUNCTION untuk membersihkan timer
+    return () => {
+      clearAudioTimer();
+    };
+  }, []); // ✅ Pastikan dependency array kosong
 
   return (
     <>
@@ -47,8 +56,8 @@ export default function Pos3() {
         ></a-text>
       </a-entity>
 
-      {/* Quiz Circle wrapped in an entity for positioning & rotation */}
-      <a-entity position="4 1.5 -2" rotation="-10 -45 0">
+      {/* Quiz Circle wrapped for positioning & rotation */}
+      <a-entity position="4 1.5 -3" rotation="-10 -45 0">
         <a-circle
           position="0 0.4 0"
           radius="0.4"
@@ -83,8 +92,8 @@ export default function Pos3() {
         position="0 3.5 -3"
       />
 
-      {/* VR Navigation */}
-      <VRNavigation currentPosId={3} maxPos={7} />
+      {/* ✅ maxPos sudah benar */}
+      <VRNavigation currentPosId={3} maxPos={6} />
     </>
   );
 }

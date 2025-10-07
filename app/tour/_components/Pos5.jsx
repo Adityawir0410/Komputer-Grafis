@@ -1,3 +1,5 @@
+// File: app/tour/_components/Pos5.jsx
+
 "use client";
 import { useState, useEffect } from 'react';
 import { useTour } from '../_context/TourContext';
@@ -6,11 +8,18 @@ import VRNavigation from './VRNavigation';
 
 export default function Pos5() {
   const [showQuiz, setShowQuiz] = useState(false);
-  const { setCurrentPos, quizCompleted } = useTour();
+  // ✅ Ambil fungsi clearAudioTimer
+  const { setCurrentPos, quizCompleted, startAudioTimer, clearAudioTimer } = useTour();
 
   useEffect(() => {
     setCurrentPos(5);
-  }, [setCurrentPos]);
+    startAudioTimer(34); // Durasi untuk Pos 5
+
+    // ✅ TAMBAHKAN CLEANUP FUNCTION untuk membersihkan timer
+    return () => {
+      clearAudioTimer();
+    };
+  }, []); // ✅ Pastikan dependency array kosong
 
   return (
     <>
@@ -84,7 +93,9 @@ export default function Pos5() {
         posId={5}
         position="0 3.5 -3"
       />
-      <VRNavigation currentPosId={5} maxPos={7} />
+      
+      {/* ✅ maxPos sudah benar */}
+      <VRNavigation currentPosId={5} maxPos={6} />
     </>
   );
 }

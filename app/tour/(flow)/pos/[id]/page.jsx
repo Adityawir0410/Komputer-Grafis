@@ -1,10 +1,12 @@
 // File: app/tour/(flow)/pos/[id]/page.jsx
 
 "use client";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
+import { useEffect } from "react";
+// ✅ PATH DIPERBAIKI: Path ini mengarah ke app/tour/_context/
+import { useTour } from "../../../_context/TourContext";
 
-// ✅ PATH DIPERBAIKI: Mengarah ke 'app/tour/_components'
 import VRLoading from "../../../_components/VRLoading";
 import HUD from "../../../_components/HUD";
 import Pos1 from "../../../_components/Pos1";
@@ -13,9 +15,7 @@ import Pos3 from "../../../_components/Pos3";
 import Pos4 from "../../../_components/Pos4";
 import Pos5 from "../../../_components/Pos5";
 import Pos6 from "../../../_components/Pos6";
-import Pos7 from "../../../_components/Pos7";
 
-// ✅ PATH DIPERBAIKI: Mengarah ke 'app/_components'
 const AFrameWrapper = dynamic(
   () => import('../../../../_components/AFrameWrapper'),
   { ssr: false, loading: () => <VRLoading /> }
@@ -23,7 +23,26 @@ const AFrameWrapper = dynamic(
 
 export default function PosPage() {
   const params = useParams();
-  const currentPosId = parseInt(params.id);
+  const router = useRouter();
+  const { highestPosReached, isInitialized } = useTour();
+  const currentPosId = parseInt(params.id, 10);
+
+  useEffect(() => {
+    if (isInitialized) {
+      if (currentPosId > highestPosReached + 1) {
+        console.log(`Akses ke Pos ${currentPosId} ditolak. Pos terjauh: ${highestPosReached}. Mengembalikan...`);
+        if (highestPosReached === 0) {
+            router.replace('/tour/briefing');
+        } else {
+            router.replace(`/tour/pos/${highestPosReached}`);
+        }
+      }
+    }
+  }, [currentPosId, highestPosReached, isInitialized, router]);
+
+  if (!isInitialized || currentPosId > highestPosReached + 1) {
+    return <VRLoading />;
+  }
 
   const renderPosContent = () => {
     switch (currentPosId) {
@@ -33,7 +52,6 @@ export default function PosPage() {
       case 4: return <Pos4 />;
       case 5: return <Pos5 />;
       case 6: return <Pos6 />;
-      case 7: return <Pos7 />;
       default: return null;
     }
   };
