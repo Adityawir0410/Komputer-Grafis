@@ -5,8 +5,19 @@ import { createContext, useContext, useState, useEffect, useRef } from 'react';
 
 const TourContext = createContext();
 
+// ✅ PETA NAVIGASI: Atur tombol 'left' dan 'right' untuk setiap Pos di sini
+// 'back' = Tombol Kembali, 'next' = Tombol Lanjut, null = Tidak ada tombol
+const navigationMap = {
+  1: { left: null, right: 'next' },      // Pos 1: Hanya ada tombol Next di kanan
+  2: { left: 'next', right: 'back' },      // Pos 2: Kiri=Next, Kanan=Back
+  3: { left: 'back', right: 'next' },      // Pos 3: Kiri=Back, Kanan=Next
+  4: { left: 'next', right: 'back' },      // Pos 4: Kiri=Back, Kanan=Next
+  5: { left: 'next', right: 'back' },      // Pos 5: Kiri=Back, Kanan=Next
+  6: { left: '', right: 'next' },      // Pos 6: Kiri=Back, Kanan=Next (tombol next akan otomatis jadi finish)
+};
+
 export function TourProvider({ children }) {
-  // --- Main States ---
+  // --- State Utama ---
   const [currentPos, setCurrentPos] = useState(0);
   const [sceneScore, setSceneScore] = useState(0);
   const [totalScore, setTotalScore] = useState(0);
@@ -17,24 +28,18 @@ export function TourProvider({ children }) {
   const [timerFrozen, setTimerFrozen] = useState(false);
   const [timerStarted, setTimerStarted] = useState(false);
   const [finishButtonClicked, setFinishButtonClicked] = useState(false);
-  
-  // State for anti-skip logic
   const [highestPosReached, setHighestPosReached] = useState(0);
-  
-  // State for audio lock
   const [isAudioFinished, setIsAudioFinished] = useState(false);
   const audioTimer = useRef(null);
 
   const maxPos = 6;
   const quizPositions = [2, 3, 5];
 
-  // Initialize data from localStorage
+  // Inisialisasi data dari localStorage
   useEffect(() => {
     const initializeData = () => {
       const savedHighestPos = localStorage.getItem('tour_highest_pos');
-      if (savedHighestPos) {
-        setHighestPosReached(parseInt(savedHighestPos, 10));
-      }
+      if (savedHighestPos) setHighestPosReached(parseInt(savedHighestPos, 10));
       
       const savedTotalScore = localStorage.getItem('tour_total_score');
       if (savedTotalScore) setTotalScore(parseInt(savedTotalScore));
@@ -57,64 +62,43 @@ export function TourProvider({ children }) {
     initializeData();
   }, []);
 
-  // Save highest progress to localStorage
-  useEffect(() => {
-    if (isInitialized) {
-      localStorage.setItem('tour_highest_pos', highestPosReached.toString());
-    }
-  }, [highestPosReached, isInitialized]);
+  // Menyimpan state penting ke localStorage
+  useEffect(() => { if (isInitialized) localStorage.setItem('tour_highest_pos', highestPosReached.toString()); }, [highestPosReached, isInitialized]);
+  useEffect(() => { if (isInitialized) localStorage.setItem('tour_total_score', totalScore.toString()); }, [totalScore, isInitialized]);
+  useEffect(() => { if (isInitialized) localStorage.setItem('tour_quiz_completed', JSON.stringify(quizCompleted)); }, [quizCompleted, isInitialized]);
 
-  // ✅ Function to clear the audio timer
-  const clearAudioTimer = () => {
-    if (audioTimer.current) {
-      clearTimeout(audioTimer.current);
-    }
-  };
-
-  // Function to start the audio timer
+  // Fungsi untuk audio timer
+  const clearAudioTimer = () => { if (audioTimer.current) clearTimeout(audioTimer.current); };
   const startAudioTimer = (durationInSeconds) => {
     setIsAudioFinished(false);
-    clearAudioTimer(); // Clear any existing timer
-    console.log(`AUDIO TIMER: Started for ${durationInSeconds} seconds.`);
-    
-    audioTimer.current = setTimeout(() => {
-      console.log(`%cAUDIO TIMER: FINISHED!`, 'color: green; font-weight: bold;');
-      setIsAudioFinished(true);
-    }, durationInSeconds * 1000);
+    clearAudioTimer();
+    audioTimer.current = setTimeout(() => setIsAudioFinished(true), durationInSeconds * 1000);
   };
   
-  // Function to update position, progress, and reset audio
+  // Fungsi utama untuk update posisi, progres, dan audio
   const updateCurrentPos = (pos) => {
     const posNumber = parseInt(pos, 10);
     if (!isNaN(posNumber)) {
       setCurrentPos(posNumber);
-      setHighestPosReached(prevHighest => Math.max(prevHighest, posNumber));
+      setHighestPosReached(prev => Math.max(prev, posNumber));
       setIsAudioFinished(false);
-      clearAudioTimer(); // Stop the old audio timer
+      clearAudioTimer();
     }
   };
 
-  // Function to reset the entire tour
+  // Fungsi untuk mereset seluruh progres tour
   const resetTour = () => {
-    ['tour_start_time', 'tour_total_score', 'tour_quiz_completed', 'tour_completed', 'tour_final_time', 'finish_button_clicked', 'tour_highest_pos']
+    ['tour_highest_pos', 'tour_start_time', 'tour_total_score', 'tour_quiz_completed', 'tour_completed', 'tour_final_time', 'finish_button_clicked']
       .forEach(item => localStorage.removeItem(item));
     
     clearAudioTimer();
-    
-    setCurrentPos(0);
-    setHighestPosReached(0);
-    setSceneScore(0);
-    setTotalScore(0);
-    setTimeRemaining(600);
-    setQuizCompleted({});
-    setTourCompleted(false);
-    setTimerFrozen(false);
-    setTimerStarted(false);
-    setFinishButtonClicked(false);
+    setCurrentPos(0); setHighestPosReached(0); setSceneScore(0); setTotalScore(0);
+    setTimeRemaining(600); setQuizCompleted({}); setTourCompleted(false);
+    setTimerFrozen(false); setTimerStarted(false); setFinishButtonClicked(false);
     setIsAudioFinished(false);
   };
 
-  // --- Other Logic (unchanged) ---
+  // Logika lainnya (timer, penyelesaian kuis, dll)
   const startTimer = () => {
     if (!timerStarted && !tourCompleted) {
       localStorage.setItem('tour_start_time', Date.now().toString());
@@ -128,9 +112,6 @@ export function TourProvider({ children }) {
      return () => clearInterval(timer);
   }, [timeRemaining, isInitialized, timerStarted, timerFrozen, finishButtonClicked]);
   
-  useEffect(() => { if (isInitialized) localStorage.setItem('tour_total_score', totalScore.toString()); }, [totalScore, isInitialized]);
-  useEffect(() => { if (isInitialized) localStorage.setItem('tour_quiz_completed', JSON.stringify(quizCompleted)); }, [quizCompleted, isInitialized]);
-
   useEffect(() => { 
     if (isInitialized && !finishButtonClicked && quizPositions.every(p => quizCompleted[p])) {
       setTourCompleted(true);
@@ -151,9 +132,7 @@ export function TourProvider({ children }) {
     localStorage.setItem('tour_final_time', timeRemaining.toString());
   };
 
-  const completeTourAndReset = () => {
-    setTimeout(resetTour, 1000);
-  };
+  const completeTourAndReset = () => setTimeout(resetTour, 1000);
 
   const formatTime = (seconds) => {
     const minutes = Math.floor(seconds / 60);
@@ -161,33 +140,15 @@ export function TourProvider({ children }) {
     return `${minutes}:${secs.toString().padStart(2, '0')}`;
   };
 
-  // --- Values provided by the Context ---
   const value = {
-    currentPos,
-    setCurrentPos: updateCurrentPos,
-    highestPosReached,
-    sceneScore,
-    setSceneScore,
-    totalScore,
-    setTotalScore,
-    timeRemaining,
-    quizCompleted,
-    tourCompleted,
-    timerFrozen,
-    timerStarted,
-    finishButtonClicked,
-    maxPos,
-    quizPositions,
-    completeQuiz,
-    resetTour,
-    completeTourAndReset,
-    startTimer,
-    handleFinishTour,
-    formatTime,
-    isInitialized,
-    isAudioFinished,
-    startAudioTimer,
-    clearAudioTimer, // ✅ Export the new clear function
+    currentPos, setCurrentPos: updateCurrentPos, highestPosReached,
+    sceneScore, setSceneScore, totalScore, setTotalScore,
+    timeRemaining, formatTime, timerStarted, startTimer, timerFrozen,
+    quizCompleted, completeQuiz, quizPositions,
+    tourCompleted, handleFinishTour, finishButtonClicked, completeTourAndReset,
+    resetTour, maxPos, isInitialized,
+    isAudioFinished, startAudioTimer, clearAudioTimer,
+    navigationMap, // ✅ Ekspor peta navigasi kustom
   };
 
   return (
@@ -199,8 +160,6 @@ export function TourProvider({ children }) {
 
 export function useTour() {
   const context = useContext(TourContext);
-  if (!context) {
-    throw new Error('useTour must be used within a TourProvider');
-  }
+  if (!context) throw new Error('useTour must be used within a TourProvider');
   return context;
 }
