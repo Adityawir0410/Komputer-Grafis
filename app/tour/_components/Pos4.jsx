@@ -1,19 +1,27 @@
+// File: app/tour/_components/Pos4.jsx
+
 "use client";
 import { useEffect } from 'react';
 import { useTour } from '../_context/TourContext';
 import VRNavigation from './VRNavigation';
 
 export default function Pos4() {
-  const { setCurrentPos } = useTour();
+  // ✅ Ambil fungsi clearAudioTimer
+  const { setCurrentPos, startAudioTimer, clearAudioTimer } = useTour();
 
   useEffect(() => {
     setCurrentPos(4);
-  }, [setCurrentPos]);
+    startAudioTimer(28); // Durasi untuk Pos 4
+
+    // ✅ TAMBAHKAN CLEANUP FUNCTION untuk membersihkan timer
+    return () => {
+      clearAudioTimer();
+    };
+  }, []); // ✅ Pastikan dependency array kosong
 
   return (
     <>
       {/* Background 360 untuk Pos 4 */}
-      {/* ✅ Rotasi diubah agar menoleh ke kiri */}
       <a-sky src="/images/360/pos4-360.jpg" rotation="0 -90 0" />
       
       {/* SFX: Pos 4 - Sludge Distribution */}
@@ -42,7 +50,8 @@ export default function Pos4() {
         width="6"
       ></a-text>
 
-      <VRNavigation currentPosId={4} maxPos={7} />
+      {/* ✅ maxPos sudah benar */}
+      <VRNavigation currentPosId={4} maxPos={6} />
     </>
   );
 }

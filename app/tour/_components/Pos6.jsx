@@ -1,14 +1,23 @@
+// File: app/tour/_components/Pos6.jsx
+
 "use client";
 import { useEffect } from 'react';
 import { useTour } from '../_context/TourContext';
 import VRNavigation from './VRNavigation';
 
 export default function Pos6() {
-  const { setCurrentPos } = useTour();
+  // ✅ Ambil fungsi clearAudioTimer
+  const { setCurrentPos, startAudioTimer, clearAudioTimer } = useTour();
 
   useEffect(() => {
     setCurrentPos(6);
-  }, [setCurrentPos]);
+    startAudioTimer(31); // Durasi untuk Pos 6
+
+    // ✅ TAMBAHKAN CLEANUP FUNCTION untuk membersihkan timer
+    return () => {
+      clearAudioTimer();
+    };
+  }, []); // ✅ Pastikan dependency array kosong
 
   return (
     <>
@@ -41,7 +50,7 @@ export default function Pos6() {
         width="6"
       ></a-text>
 
-      {/* VR Navigation */}
+      {/* ✅ maxPos sudah benar */}
       <VRNavigation currentPosId={6} maxPos={6} />
     </>
   );

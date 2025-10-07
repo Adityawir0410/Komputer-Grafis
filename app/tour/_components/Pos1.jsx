@@ -1,53 +1,31 @@
+// File: app/tour/_components/Pos1.jsx
+
 "use client";
 import VRNavigation from './VRNavigation';
 import { useEffect } from 'react';
 import { useTour } from '../_context/TourContext';
 
 export default function Pos1() {
-  const { setCurrentPos, startTimer, timerStarted } = useTour();
+  const { setCurrentPos, startTimer, timerStarted, startAudioTimer } = useTour();
 
   useEffect(() => {
     setCurrentPos(1);
     if (!timerStarted) {
       startTimer();
     }
-  }, [setCurrentPos, startTimer, timerStarted]);
+    startAudioTimer(29);
+    
+  // ✅ PERBAIKAN UTAMA: Pastikan useEffect hanya berjalan sekali saat komponen dimuat
+  }, []);
 
   return (
     <>
-      {/* 360 Background for Pos 1 */}
+      {/* ... sisa kode JSX Anda tetap sama ... */}
       <a-sky src="/images/360/pos1-360.jpg" rotation="-2 -80 0" />
-
-      {/* ✅ SFX Audio Added Here */}
-      <audio
-        src="/sounds/sfx_2_Collection Tank.MP3"
-        autoPlay
-        preload="auto"
-        playsInline
-      />
-
-      {/* Background plane height adjusted for two lines */}
-      <a-plane 
-        position="0 3 -3.05" 
-        width="5.5" 
-        height="1.2" 
-        color="#fff" 
-        opacity="0.75" 
-        material="side: double; transparent: true" 
-      />
-      
-      {/* Title updated to be on two lines */}
-      <a-text 
-        value={"Pos 1\nCollection Tank & Pumping Stage"}
-        position="0 3 -3" 
-        align="center" 
-        color="#1F2937"
-        width="6"
-        side="double"
-      ></a-text>
-      
-      {/* Navigation Buttons */}
-      <VRNavigation currentPosId={1} maxPos={7} />
+      <audio src="/sounds/sfx_2_Collection Tank.MP3" autoPlay preload="auto" playsInline />
+      <a-plane position="0 3 -3.05" width="5.5" height="1.2" color="#fff" opacity="0.75" material="side: double; transparent: true" />
+      <a-text value={"Pos 1\nCollection Tank & Pumping Stage"} position="0 3 -3" align="center" color="#1F2937" width="6" side="double"></a-text>
+      <VRNavigation currentPosId={1} maxPos={6} />
     </>
   );
 }

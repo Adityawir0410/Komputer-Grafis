@@ -1,166 +1,108 @@
+// File: app/tour/_context/TourContext.jsx
+
 "use client";
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect, useRef } from 'react';
 
 const TourContext = createContext();
 
 export function TourProvider({ children }) {
-  const [currentPos, setCurrentPos] = useState(1);
+  // --- Main States ---
+  const [currentPos, setCurrentPos] = useState(0);
   const [sceneScore, setSceneScore] = useState(0);
   const [totalScore, setTotalScore] = useState(0);
-  const [timeRemaining, setTimeRemaining] = useState(600); // 10 minutes in seconds
+  const [timeRemaining, setTimeRemaining] = useState(600);
   const [quizCompleted, setQuizCompleted] = useState({});
   const [isInitialized, setIsInitialized] = useState(false);
   const [tourCompleted, setTourCompleted] = useState(false);
   const [timerFrozen, setTimerFrozen] = useState(false);
   const [timerStarted, setTimerStarted] = useState(false);
   const [finishButtonClicked, setFinishButtonClicked] = useState(false);
-  const maxPos = 6; // Updated to 7 positions
-  const quizPositions = [2, 3, 5]; // Quiz positions: Pos 2, 3, and 5
+  
+  // State for anti-skip logic
+  const [highestPosReached, setHighestPosReached] = useState(0);
+  
+  // State for audio lock
+  const [isAudioFinished, setIsAudioFinished] = useState(false);
+  const audioTimer = useRef(null);
 
-  // Initialize data without starting timer
+  const maxPos = 6;
+  const quizPositions = [2, 3, 5];
+
+  // Initialize data from localStorage
   useEffect(() => {
     const initializeData = () => {
-      const savedTourCompleted = localStorage.getItem('tour_completed');
-      const savedFinalTime = localStorage.getItem('tour_final_time');
-      const savedFinishClicked = localStorage.getItem('finish_button_clicked');
-      const startTime = localStorage.getItem('tour_start_time');
-      
-      // Check if tour was already completed
-      if (savedTourCompleted === 'true' && savedFinishClicked === 'true') {
-        setTourCompleted(true);
-        setTimerFrozen(true);
-        setTimerStarted(true);
-        setFinishButtonClicked(true);
-        if (savedFinalTime) {
-          setTimeRemaining(parseInt(savedFinalTime));
-        }
-      } else if (startTime) {
-        // Tour was already started, calculate elapsed time
-        const currentTime = Date.now();
-        const elapsedSeconds = Math.floor((currentTime - parseInt(startTime)) / 1000);
-        const remaining = Math.max(0, 600 - elapsedSeconds);
-        setTimeRemaining(remaining);
-        setTimerStarted(true);
-        setTimerFrozen(false);
-        setTourCompleted(false);
-        setFinishButtonClicked(false);
-      } else {
-        // Timer not started yet
-        setTimeRemaining(600);
-        setTimerStarted(false);
-        setTimerFrozen(false);
-        setTourCompleted(false);
-        setFinishButtonClicked(false);
+      const savedHighestPos = localStorage.getItem('tour_highest_pos');
+      if (savedHighestPos) {
+        setHighestPosReached(parseInt(savedHighestPos, 10));
       }
-
-      // Load other saved data
+      
       const savedTotalScore = localStorage.getItem('tour_total_score');
+      if (savedTotalScore) setTotalScore(parseInt(savedTotalScore));
+      
       const savedQuizCompleted = localStorage.getItem('tour_quiz_completed');
-      
-      if (savedTotalScore) {
-        setTotalScore(parseInt(savedTotalScore));
-      }
-      
       if (savedQuizCompleted) {
-        try {
-          setQuizCompleted(JSON.parse(savedQuizCompleted));
-        } catch (e) {
-          console.error('Error parsing saved quiz data:', e);
-        }
+        try { setQuizCompleted(JSON.parse(savedQuizCompleted)); }
+        catch (e) { console.error('Error parsing saved quiz data:', e); }
       }
 
+      const startTime = localStorage.getItem('tour_start_time');
+      if (startTime) {
+        const elapsedSeconds = Math.floor((Date.now() - parseInt(startTime)) / 1000);
+        setTimeRemaining(Math.max(0, 600 - elapsedSeconds));
+        setTimerStarted(true);
+      }
+      
       setIsInitialized(true);
     };
-
-    const timer = setTimeout(initializeData, 100);
-    return () => clearTimeout(timer);
+    initializeData();
   }, []);
 
-  // Start timer when reaching Pos 1
-  const startTimer = () => {
-    if (!timerStarted && !tourCompleted) {
-      const currentTime = Date.now();
-      localStorage.setItem('tour_start_time', currentTime.toString());
-      setTimerStarted(true);
-      console.log('Timer started at Pos 1');
+  // Save highest progress to localStorage
+  useEffect(() => {
+    if (isInitialized) {
+      localStorage.setItem('tour_highest_pos', highestPosReached.toString());
+    }
+  }, [highestPosReached, isInitialized]);
+
+  // ✅ Function to clear the audio timer
+  const clearAudioTimer = () => {
+    if (audioTimer.current) {
+      clearTimeout(audioTimer.current);
     }
   };
 
-  // Timer countdown - only run if started, not frozen, and not completed
-  useEffect(() => {
-    if (!isInitialized || !timerStarted || timeRemaining <= 0 || timerFrozen || finishButtonClicked) {
-      return;
+  // Function to start the audio timer
+  const startAudioTimer = (durationInSeconds) => {
+    setIsAudioFinished(false);
+    clearAudioTimer(); // Clear any existing timer
+    console.log(`AUDIO TIMER: Started for ${durationInSeconds} seconds.`);
+    
+    audioTimer.current = setTimeout(() => {
+      console.log(`%cAUDIO TIMER: FINISHED!`, 'color: green; font-weight: bold;');
+      setIsAudioFinished(true);
+    }, durationInSeconds * 1000);
+  };
+  
+  // Function to update position, progress, and reset audio
+  const updateCurrentPos = (pos) => {
+    const posNumber = parseInt(pos, 10);
+    if (!isNaN(posNumber)) {
+      setCurrentPos(posNumber);
+      setHighestPosReached(prevHighest => Math.max(prevHighest, posNumber));
+      setIsAudioFinished(false);
+      clearAudioTimer(); // Stop the old audio timer
     }
-
-    const timer = setInterval(() => {
-      setTimeRemaining(prev => {
-        const newTime = Math.max(0, prev - 1);
-        return newTime;
-      });
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, [timeRemaining, isInitialized, timerStarted, timerFrozen, finishButtonClicked]);
-
-  // Save data to localStorage
-  useEffect(() => {
-    if (!isInitialized) return;
-    localStorage.setItem('tour_total_score', totalScore.toString());
-  }, [totalScore, isInitialized]);
-
-  useEffect(() => {
-    if (!isInitialized) return;
-    localStorage.setItem('tour_quiz_completed', JSON.stringify(quizCompleted));
-  }, [quizCompleted, isInitialized]);
-
-  // Check if all quizzes are completed (but don't stop timer yet)
-  useEffect(() => {
-    if (!isInitialized || finishButtonClicked) return;
-    
-    const allQuizzesComplete = quizPositions.every(pos => quizCompleted[pos]);
-    const completedQuizCount = quizPositions.filter(pos => quizCompleted[pos]).length;
-    
-    console.log('Quiz check:', { 
-      allQuizzesComplete, 
-      completedQuizCount, 
-      requiredQuizzes: quizPositions.length,
-      quizCompleted 
-    });
-    
-    // Only mark tour as ready to complete, but don't stop timer yet
-    if (allQuizzesComplete && completedQuizCount === quizPositions.length) {
-      console.log('All quizzes completed, tour ready to finish but timer still running');
-      setTourCompleted(true);
-      localStorage.setItem('tour_completed', 'true');
-    }
-  }, [quizCompleted, isInitialized, finishButtonClicked, quizPositions]);
-
-  const completeQuiz = (posId, score) => {
-    console.log(`Completing quiz for pos ${posId} with score ${score}`);
-    
-    const newQuizCompleted = {
-      ...quizCompleted,
-      [posId]: true
-    };
-    
-    setQuizCompleted(newQuizCompleted);
-    setTotalScore(prev => prev + score);
-    setSceneScore(score);
-    
-    // Just log completion, don't stop timer here
-    const completedRequiredQuizzes = quizPositions.filter(pos => newQuizCompleted[pos]).length;
-    console.log('Completed required quizzes:', completedRequiredQuizzes, 'of', quizPositions.length);
   };
 
+  // Function to reset the entire tour
   const resetTour = () => {
-    localStorage.removeItem('tour_start_time');
-    localStorage.removeItem('tour_total_score');
-    localStorage.removeItem('tour_quiz_completed');
-    localStorage.removeItem('tour_completed');
-    localStorage.removeItem('tour_final_time');
-    localStorage.removeItem('finish_button_clicked');
+    ['tour_start_time', 'tour_total_score', 'tour_quiz_completed', 'tour_completed', 'tour_final_time', 'finish_button_clicked', 'tour_highest_pos']
+      .forEach(item => localStorage.removeItem(item));
     
-    setCurrentPos(1);
+    clearAudioTimer();
+    
+    setCurrentPos(0);
+    setHighestPosReached(0);
     setSceneScore(0);
     setTotalScore(0);
     setTimeRemaining(600);
@@ -169,11 +111,40 @@ export function TourProvider({ children }) {
     setTimerFrozen(false);
     setTimerStarted(false);
     setFinishButtonClicked(false);
+    setIsAudioFinished(false);
   };
 
-  // New function to handle finish button click
+  // --- Other Logic (unchanged) ---
+  const startTimer = () => {
+    if (!timerStarted && !tourCompleted) {
+      localStorage.setItem('tour_start_time', Date.now().toString());
+      setTimerStarted(true);
+    }
+  };
+
+  useEffect(() => {
+     if (!isInitialized || !timerStarted || timeRemaining <= 0 || timerFrozen || finishButtonClicked) return;
+     const timer = setInterval(() => setTimeRemaining(prev => Math.max(0, prev - 1)), 1000);
+     return () => clearInterval(timer);
+  }, [timeRemaining, isInitialized, timerStarted, timerFrozen, finishButtonClicked]);
+  
+  useEffect(() => { if (isInitialized) localStorage.setItem('tour_total_score', totalScore.toString()); }, [totalScore, isInitialized]);
+  useEffect(() => { if (isInitialized) localStorage.setItem('tour_quiz_completed', JSON.stringify(quizCompleted)); }, [quizCompleted, isInitialized]);
+
+  useEffect(() => { 
+    if (isInitialized && !finishButtonClicked && quizPositions.every(p => quizCompleted[p])) {
+      setTourCompleted(true);
+      localStorage.setItem('tour_completed', 'true');
+    }
+  }, [quizCompleted, isInitialized, finishButtonClicked, quizPositions]);
+
+  const completeQuiz = (posId, score) => {
+    setQuizCompleted(prev => ({ ...prev, [posId]: true }));
+    setTotalScore(prev => prev + score);
+    setSceneScore(score);
+  };
+
   const handleFinishTour = () => {
-    console.log('Finish button clicked, stopping timer at:', timeRemaining);
     setFinishButtonClicked(true);
     setTimerFrozen(true);
     localStorage.setItem('finish_button_clicked', 'true');
@@ -181,9 +152,7 @@ export function TourProvider({ children }) {
   };
 
   const completeTourAndReset = () => {
-    setTimeout(() => {
-      resetTour();
-    }, 1000);
+    setTimeout(resetTour, 1000);
   };
 
   const formatTime = (seconds) => {
@@ -192,9 +161,11 @@ export function TourProvider({ children }) {
     return `${minutes}:${secs.toString().padStart(2, '0')}`;
   };
 
+  // --- Values provided by the Context ---
   const value = {
     currentPos,
-    setCurrentPos,
+    setCurrentPos: updateCurrentPos,
+    highestPosReached,
     sceneScore,
     setSceneScore,
     totalScore,
@@ -213,7 +184,10 @@ export function TourProvider({ children }) {
     startTimer,
     handleFinishTour,
     formatTime,
-    isInitialized
+    isInitialized,
+    isAudioFinished,
+    startAudioTimer,
+    clearAudioTimer, // ✅ Export the new clear function
   };
 
   return (

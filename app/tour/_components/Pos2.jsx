@@ -1,3 +1,5 @@
+// File: app/tour/_components/Pos2.jsx
+
 "use client";
 import { useState, useEffect } from 'react';
 import { useTour } from '../_context/TourContext';
@@ -6,11 +8,18 @@ import VRNavigation from './VRNavigation';
 
 export default function Pos2() {
   const [showQuiz, setShowQuiz] = useState(false);
-  const { setCurrentPos, quizCompleted } = useTour();
+  // ✅ Ambil fungsi clearAudioTimer
+  const { setCurrentPos, quizCompleted, startAudioTimer, clearAudioTimer } = useTour();
 
   useEffect(() => {
     setCurrentPos(2);
-  }, [setCurrentPos]);
+    startAudioTimer(28);
+    
+    // ✅ TAMBAHKAN CLEANUP FUNCTION untuk membersihkan timer
+    return () => {
+      clearAudioTimer();
+    };
+  }, []); // ✅ Pastikan dependency array kosong agar hanya berjalan sekali
 
   return (
     <>
@@ -46,12 +55,10 @@ export default function Pos2() {
         playsInline
       />
       
-      {/* ✅ Quiz Circle dibungkus dengan <a-entity> untuk diatur posisi & rotasinya */}
-      <a-entity position="4 1 -3" rotation="-10 -45 0">
-        
-        {/* Quiz Circle in VR */}
+      {/* Quiz Circle wrapped for positioning & rotation */}
+      <a-entity position="4 1.5 -3" rotation="-10 -45 0">
         <a-circle
-          position="0 0.4 0" // Posisi disesuaikan relatif terhadap grup
+          position="0 0.4 0"
           radius="0.4"
           color={quizCompleted[2] ? "#10B981" : "#3B82F6"}
           className="clickable"
@@ -66,16 +73,13 @@ export default function Pos2() {
             width="8"
           ></a-text>
         </a-circle>
-
-        {/* Quiz Label Text */}
         <a-text
           value="QUIZ"
-          position="0 -0.3 0" // Posisi disesuaikan relatif terhadap grup
+          position="0 -0.3 0"
           align="center"
           color="#1F2937"
           width="4"
         ></a-text>
-
       </a-entity>
 
       {/* VR Quiz Card */}
@@ -86,8 +90,8 @@ export default function Pos2() {
         position="0 3.5 -3"
       />
 
-      {/* VR Navigation */}
-      <VRNavigation currentPosId={2} maxPos={7} />
+      {/* ✅ maxPos diubah menjadi 6 */}
+      <VRNavigation currentPosId={2} maxPos={6} />
     </>
   );
 }
