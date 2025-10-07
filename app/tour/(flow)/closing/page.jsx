@@ -1,24 +1,31 @@
+// File: app/tour/(flow)/closing/page.jsx
+
 "use client";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
+import dynamic from "next/dynamic";
 import { useTour } from "../../_context/TourContext";
 import { useAuth } from "../../../_context/AuthContext";
-import { useEffect, useState, useRef } from "react"; // 1. Import useRef
+import { useEffect, useRef, useState } from "react";
+import VRLoading from "../../_components/VRLoading";
+
+const AFrameWrapper = dynamic(
+  () => import('../../../_components/AFrameWrapper'),
+  { ssr: false, loading: () => <VRLoading /> }
+);
 
 export default function ClosingPage() {
+  // ... (semua logika hooks Anda tetap sama)
   const { totalScore, completeTourAndReset, formatTime, timeRemaining } = useTour();
   const { user } = useAuth();
   const [saveStatus, setSaveStatus] = useState('pending');
-  
-  // 2. Buat useRef sebagai penanda
-  const hasSaved = useRef(false); 
+  const router = useRouter();
+  const hasSaved = useRef(false);
 
   useEffect(() => {
+    // ... (logika useEffect Anda tetap sama)
     const saveResult = async () => {
-      // 3. Tambahkan kondisi untuk memeriksa penanda
-      if (user && !hasSaved.current) { 
-        // 4. Set penanda menjadi true agar tidak berjalan lagi
-        hasSaved.current = true; 
-        
+      if (user && !hasSaved.current) {
+        hasSaved.current = true;
         setSaveStatus('saving');
         try {
           const response = await fetch('/api/tour/save-result', {
@@ -33,77 +40,84 @@ export default function ClosingPage() {
               final_time_seconds: timeRemaining,
             }),
           });
-          
           if (!response.ok) throw new Error('Gagal mengirim data');
-          
           setSaveStatus('success');
-          console.log('Hasil berhasil disimpan!');
-
         } catch (error) {
           setSaveStatus('error');
           console.error('Gagal menyimpan hasil:', error);
         }
       }
     };
-
     saveResult();
-    
-  // Hilangkan saveStatus dari dependency array agar tidak memicu eksekusi ulang
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, totalScore, timeRemaining]);
 
   const handleReturnHome = () => {
     completeTourAndReset();
+    router.push('/');
   };
 
   return (
-    <main className="flex flex-col items-center justify-center min-h-screen gap-6 bg-gradient-to-br from-green-50 to-blue-50">
-      <div className="bg-white rounded-xl shadow-lg p-8 max-w-md w-full text-center">
-        <div className="mb-6">
-          <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <span className="text-4xl">🏆</span>
-          </div>
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">
-            Selamat!
-          </h1>
-          <p className="text-gray-600">
-            Anda telah menyelesaikan tour VR Wastewater Treatment Plant
-          </p>
-        </div>
+    <div className="w-screen h-screen">
+      <audio
+        src="/sounds/sfx_9_Closing.MP3"
+        autoPlay
+        preload="auto"
+        playsInline
+      />
+      
+      <AFrameWrapper>
+        <a-sky src="/images/360/loby-ipal-sier-360.jpg" rotation="0 -80 0" color="#ECEFF1" />
+        <a-entity position="0 1.8 -3">
+          
+          <a-plane
+            position="0 0 -0.05"
+            width="4"
+            height="3.5"
+            color="#FFFFFF"
+            opacity="0.9"
+            material="shader: flat"
+          ></a-plane>
 
-        <div className="bg-gray-50 rounded-lg p-4 mb-6">
-          <h2 className="text-lg font-semibold text-gray-800 mb-3">
-            Hasil Tour Anda:
-          </h2>
-          <div className="grid grid-cols-2 gap-4 text-sm">
-            <div>
-              <p className="text-gray-500">Total Score</p>
-              <p className="text-2xl font-bold text-green-600">{totalScore}</p>
-            </div>
-            <div>
-              <p className="text-gray-500">Waktu Final</p>
-              <p className="text-2xl font-bold text-orange-600">
-                {formatTime(timeRemaining)}
-              </p>
-            </div>
-          </div>
-        </div>
+          <a-text
+            value="Selamat!"
+            position="0 1.2 0"
+            align="center"
+            color="#1F2937"
+            width="6"
+            font="https://cdn.aframe.io/fonts/Exo2Bold.fnt"
+            scale="1.2 1.2 1.2"
+          ></a-text>
+          
+          {/* ✅ Posisi Y digeser ke bawah untuk memberi jarak */}
+          <a-text
+            value="Anda telah menyelesaikan tour VR Wastewater Treatment Plant"
+            position="0 0.6 0"
+            align="center"
+            color="#4B5563"
+            width="3.5"
+            wrap-count="40"
+            scale="1.1 1.1 1.1"
+          ></a-text>
 
-        <Link 
-          href="/" 
-          onClick={handleReturnHome}
-          className="inline-block w-full rounded-lg bg-blue-600 text-white px-6 py-3 hover:bg-blue-700 transition-colors font-medium"
-        >
-          Kembali ke Home
-        </Link>
-        
-        <div className="text-xs text-gray-500 mt-4">
-          {saveStatus === 'saving' && <p>Menyimpan hasil Anda...</p>}
-          {saveStatus === 'success' && <p className="text-green-600">Hasil Anda telah disimpan.</p>}
-          {saveStatus === 'error' && <p className="text-red-600">Gagal menyimpan hasil.</p>}
-          <p className="mt-2">* Data tour akan direset untuk pengalaman baru</p>
-        </div>
-      </div>
-    </main>
+          {/* ... (sisa kode dari garis pemisah ke bawah tidak diubah) ... */}
+          <a-plane position="0 0.35 0" width="3.5" height="0.02" color="#E5E7EB"></a-plane>
+          <a-entity position="0 -0.25 0">
+            <a-text value="Total Score" position="-0.9 0.2 0" align="center" color="#6B7280" width="3.5"></a-text>
+            <a-text value={totalScore} position="-0.9 -0.1 0" align="center" color="#10B981" width="7" font="https://cdn.aframe.io/fonts/Exo2Bold.fnt"></a-text>
+            <a-text value="Waktu Final" position="0.9 0.2 0" align="center" color="#6B7280" width="3.5"></a-text>
+            <a-text value={formatTime(timeRemaining)} position="0.9 -0.1 0" align="center" color="#F59E0B" width="7" font="https://cdn.aframe.io/fonts/Exo2Bold.fnt"></a-text>
+          </a-entity>
+          <a-entity position="0 -1.0 0" className="clickable" onClick={handleReturnHome}>
+            <a-plane
+              width="3"
+              height="0.6"
+              color="#2563EB"
+              animation="property: scale; to: 1.05 1.05 1.05; startEvents: mouseenter; endEvents: mouseleave; dur: 200"
+            ></a-plane>
+            <a-text value="Kembali ke Home" align="center" color="white" width="6"></a-text>
+          </a-entity>
+        </a-entity>
+      </AFrameWrapper>
+    </div>
   );
 }

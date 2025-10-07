@@ -13,7 +13,8 @@ export default function Pos4() {
   return (
     <>
       {/* Background 360 untuk Pos 4 */}
-      <a-sky src="/images/360/pos4-360.jpg" rotation="0 0 0" />
+      {/* ✅ Rotasi diubah agar menoleh ke kiri */}
+      <a-sky src="/images/360/pos4-360.jpg" rotation="0 -90 0" />
       
       {/* SFX: Pos 4 - Sludge Distribution */}
       <audio
@@ -23,10 +24,7 @@ export default function Pos4() {
         playsInline
       />
 
-      {/* ✅ PEMBUNGKUS JUDUL DISESUAIKAN DI SINI
-        - <a-box> diganti menjadi <a-plane> agar konsisten.
-        - Dimensinya disesuaikan agar pas dengan teks.
-      */}
+      {/* Wrapper untuk Judul */}
       <a-plane
         position="0 3 -3.05"
         width="5"

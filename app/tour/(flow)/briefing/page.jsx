@@ -14,25 +14,35 @@ export default function BriefingPage() {
       />
       <MainScene>
         {/* 360 Background for Briefing */}
-  <a-sky src="/images/360/loby-ipal-sier-360.jpg" rotation="0 -80 0" />
+        <a-sky src="/images/360/loby-ipal-sier-360.jpg" rotation="0 -80 0" />
 
-        {/* Briefing text */}
+        {/* ✅ Position updated: moved lower and further */}
+        <a-plane
+          position="0 2.2 -3.05"
+          width="6.5"
+          height="1.2" 
+          color="#fff"
+          opacity="0.75"
+          material="side: double; transparent: true"
+        />
+
+        {/* ✅ Position updated: moved lower and further */}
         <a-text
-          value="Selamat datang di Virtual Wastewater Treatment Plant!\n\nTimer akan dimulai ketika Anda mencapai Pos 1.\nBersiaplah untuk memulai tour!"
-          position="0 2.5 -2"
+          value="Welcome to the Virtual Wastewater Treatment Plant!\n\nGet ready to start the tour!"
+          position="0 2.2 -3"
           align="center"
           color="#1F2937"
           width="6"
         ></a-text>
       </MainScene>
 
-      {/* tombol start */}
+      {/* Start button */}
       <div className="fixed bottom-6 left-0 right-0 flex justify-center z-10">
         <Link
           href="/tour/pos/1"
           className="rounded bg-green-600 text-white px-6 py-3 hover:bg-green-700 font-medium"
         >
-          Mulai ke POS 1 (Start Timer)
+          Proceed to POS 1 (Start Timer)
         </Link>
       </div>
     </div>
