@@ -24,7 +24,7 @@ export default function VRNavigation({ currentPosId, maxPos }) {
   const navRules = navigationMap[currentPosId] || { left: null, right: 'next' };
 
   // Komponen kecil untuk merender tombol
-  const NavButton = ({ type }) => {
+  const NavButton = ({ type, side }) => {
     let config = {};
 
     if (type === 'back' && canGoPrev) {
@@ -45,16 +45,51 @@ export default function VRNavigation({ currentPosId, maxPos }) {
     }
 
     return (
-      <a-entity className={!config.isLocked ? "clickable" : ""} onClick={!config.isLocked ? config.action : null}>
-        <a-cylinder
-          radius="0.15" height="0.05" color={config.color}
-          animation__scale={!config.isLocked ? "property: scale; to: 1.1 1.1 1; startEvents: mouseenter; endEvents: mouseleave; dur: 200" : ""}
-        >
-          <a-text value={config.icon} position="0 0 0.03" align="center" color="white" width="4"></a-text>
-        </a-cylinder>
+      <a-entity
+        className={!config.isLocked ? "clickable" : ""}
+        onClick={!config.isLocked ? config.action : null}
+      >
+        {/* Container diputar -90 derajat pada sumbu X; arah panah mengikuti sisi */}
+        <a-entity rotation={side === 'left' ? "-90 180 0" : "-90 0 0"}>
+          {/* Area klik transparan */}
+          <a-plane
+            width="2.1" height="0.80" position="0 0 0"
+            color="#111827" opacity="0"
+            animation__hover={!config.isLocked ? "property: scale; to: 1.08 1.08 1; startEvents: mouseenter; endEvents: mouseleave; dur: 150" : ""}
+          ></a-plane>
+
+          {/* Grup chevron animasi (3 buah) */}
+          <a-entity position="0 0 0.05">
+          {Array.from({ length: 3 }).map((_, i) => {
+            const delay = 120 * i;
+            const baseX = -0.20 + i * 0.20; // sesuaikan untuk ikon lebih besar
+            const encoded = '%23FFFFFF';
+            const svg = `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='${encoded}'><path d='M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z'/></svg>`;
+            return (
+              <a-image
+                key={i}
+                src={svg}
+                width="0.56"
+                height="0.56"
+                position={`${baseX} 0 ${0.001 * i}`}
+                material="transparent: true; depthTest: false; depthWrite: false"
+                opacity={config.isLocked ? "0.35" : "1"}
+                animation__fade={config.isLocked ? "" :
+                  `property: opacity; from: 0.6; to: 1; dir: alternate; loop: true; dur: 550; delay: ${delay}`
+                }
+                animation__move={config.isLocked ? "" :
+                  `property: position; from: ${baseX - 0.035} 0 0; to: ${baseX + 0.035} 0 0; dir: alternate; loop: true; dur: 550; delay: ${delay}`
+                }
+              ></a-image>
+            );
+          })}
+          </a-entity>
+        </a-entity>
+
+        {/* Label di bawah tombol */}
         <a-text
-          value={config.label} position="0 -0.15 0" align="center"
-          color={config.labelColor} width="1.5"
+          value={config.label} position="0 -0.2 0" align="center"
+          color={config.labelColor} width="1.8"
         ></a-text>
       </a-entity>
     );
@@ -66,12 +101,12 @@ export default function VRNavigation({ currentPosId, maxPos }) {
       
       {/* Tombol Kiri, dirender secara dinamis berdasarkan `navRules` */}
       <a-entity position="-1 -0.2 0.1">
-        <NavButton type={navRules.left} />
+        <NavButton type={navRules.left} side="left" />
       </a-entity>
 
       {/* Tombol Kanan, dirender secara dinamis berdasarkan `navRules` */}
       <a-entity position="1 -0.2 0.2">
-        <NavButton type={navRules.right} />
+        <NavButton type={navRules.right} side="right" />
       </a-entity>
       
     </a-entity>

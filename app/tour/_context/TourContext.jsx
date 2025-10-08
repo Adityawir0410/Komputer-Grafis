@@ -8,12 +8,12 @@ const TourContext = createContext();
 // ✅ PETA NAVIGASI: Atur tombol 'left' dan 'right' untuk setiap Pos di sini
 // 'back' = Tombol Kembali, 'next' = Tombol Lanjut, null = Tidak ada tombol
 const navigationMap = {
-  1: { left: null, right: 'next' },      // Pos 1: Hanya ada tombol Next di kanan
-  2: { left: 'next', right: 'back' },      // Pos 2: Kiri=Next, Kanan=Back
-  3: { left: 'back', right: 'next' },      // Pos 3: Kiri=Back, Kanan=Next
-  4: { left: 'next', right: 'back' },      // Pos 4: Kiri=Back, Kanan=Next
-  5: { left: 'next', right: 'back' },      // Pos 5: Kiri=Back, Kanan=Next
-  6: { left: '', right: 'next' },      // Pos 6: Kiri=Back, Kanan=Next (tombol next akan otomatis jadi finish)
+  1: { left: null, right: 'next' },         // Pos 1: kanan >>>
+  2: { left: 'next', right: 'back' },       // Pos 2: kiri <<<, kanan >>>
+  3: { left: 'back', right: 'next' },       // Pos 3: kiri >>>, kanan <<<
+  4: { left: 'next', right: 'back' },       // Pos 4: kiri <<<, kanan >>>
+  5: { left: 'next', right: 'back' },       // Pos 5: kiri <<<, kanan >>>
+  6: { left: null, right: 'next' },         // Pos 6: kanan >>>
 };
 
 export function TourProvider({ children }) {
