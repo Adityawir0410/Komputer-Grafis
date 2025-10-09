@@ -21,13 +21,20 @@ export default function PointerOverlay() {
     if (typeof document !== 'undefined') {
       if (isCenterPointerMode) {
         document.body.style.cursor = 'none';
+        // Try to acquire pointer lock for raw mouse movement
+        const target = document.body || document.documentElement;
+        if (target && target.requestPointerLock) {
+          try { target.requestPointerLock(); } catch (e) { /* no-op */ }
+        }
       } else {
         document.body.style.cursor = '';
+        if (document.exitPointerLock) document.exitPointerLock();
       }
     }
     return () => {
       if (typeof document !== 'undefined') {
         document.body.style.cursor = '';
+        if (document.exitPointerLock) document.exitPointerLock();
       }
     };
   }, [isCenterPointerMode]);
