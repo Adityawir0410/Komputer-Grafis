@@ -46,7 +46,7 @@ export default function VRNavigation({ currentPosId, maxPos }) {
 
     return (
       <a-entity
-        class={!config.isLocked ? "clickable" : ""}
+        className={!config.isLocked ? "clickable" : ""}
         onClick={!config.isLocked ? config.action : null}
       >
         {/* Container diputar -90 derajat pada sumbu X; arah panah mengikuti sisi */}

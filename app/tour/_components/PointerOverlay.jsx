@@ -1,10 +1,9 @@
 "use client";
-import { useEffect, useCallback, useState } from 'react';
+import { useEffect, useCallback } from 'react';
 import { useTour } from '../_context/TourContext';
 
 export default function PointerOverlay() {
   const { isCenterPointerMode, setIsCenterPointerMode } = useTour();
-  const [isLocked, setIsLocked] = useState(false);
 
   const handleKeyDown = useCallback((e) => {
     if (e.key === 'Alt') {
@@ -12,25 +11,10 @@ export default function PointerOverlay() {
     }
   }, [setIsCenterPointerMode]);
 
-  const requestLock = useCallback(() => {
-    if (!isCenterPointerMode) return;
-    const target = document.body || document.documentElement;
-    if (target.requestPointerLock) target.requestPointerLock();
-  }, [isCenterPointerMode]);
-
-  const updateLockState = useCallback(() => {
-    const locked = typeof document !== 'undefined' && !!document.pointerLockElement;
-    setIsLocked(locked);
-  }, []);
-
   useEffect(() => {
     window.addEventListener('keydown', handleKeyDown);
-    document.addEventListener('pointerlockchange', updateLockState);
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-      document.removeEventListener('pointerlockchange', updateLockState);
-    };
-  }, [handleKeyDown, updateLockState]);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [handleKeyDown]);
 
   useEffect(() => {
     // Hide/show system cursor globally while in center-pointer mode
@@ -39,7 +23,6 @@ export default function PointerOverlay() {
         document.body.style.cursor = 'none';
       } else {
         document.body.style.cursor = '';
-        if (document.exitPointerLock) document.exitPointerLock();
       }
     }
     return () => {
@@ -52,19 +35,15 @@ export default function PointerOverlay() {
   if (!isCenterPointerMode) return null;
 
   return (
-    <div className="fixed inset-0 z-40">
-      {/* Click-catcher to engage pointer lock when entering center mode */}
-      {!isLocked && (
-        <a-entity class="clickable" onClick={requestLock} position="0 0 0"></a-entity>
-      )}
+    <div className="pointer-events-none fixed inset-0 z-40">
       {/* Center reticle */}
       <div
-        className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+        className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
       >
         <div className="w-4 h-4 rounded-full border-2 border-white/90 shadow-[0_0_8px_rgba(255,255,255,0.6)]" />
       </div>
       {/* Helper hint at bottom-right */}
-      <div className="pointer-events-none absolute bottom-4 right-4 text-white/80 text-xs bg-black/60 rounded px-2 py-1">
+      <div className="absolute bottom-4 right-4 text-white/80 text-xs bg-black/60 rounded px-2 py-1">
         ALT: toggle cursor / pointer
       </div>
     </div>
