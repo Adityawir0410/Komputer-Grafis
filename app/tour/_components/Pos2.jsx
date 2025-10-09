@@ -61,7 +61,7 @@ export default function Pos2() {
           position="0 0.4 0"
           radius="0.4"
           color={quizCompleted[2] ? "#10B981" : "#3B82F6"}
-          className="clickable"
+          class="clickable"
           onClick={() => !quizCompleted[2] && setShowQuiz(true)}
           animation={!quizCompleted[2] ? "property: scale; to: 1.1 1.1 1.1; dir: alternate; loop: true; dur: 1000" : ""}
         >

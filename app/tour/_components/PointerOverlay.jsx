@@ -55,12 +55,7 @@ export default function PointerOverlay() {
     <div className="fixed inset-0 z-40">
       {/* Click-catcher to engage pointer lock when entering center mode */}
       {!isLocked && (
-        <button
-          type="button"
-          className="absolute inset-0 w-full h-full bg-transparent"
-          onClick={requestLock}
-          aria-label="Engage pointer lock"
-        />
+        <a-entity class="clickable" onClick={requestLock} position="0 0 0"></a-entity>
       )}
       {/* Center reticle */}
       <div

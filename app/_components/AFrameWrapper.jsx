@@ -9,7 +9,7 @@ export default function AFrameWrapper({ children }) {
             embedded
             vr-mode-ui="enabled: false"
             device-orientation-permission-ui="enabled: false"
-            style={{ height: "100%", width: "100%" }}
+            style={{ height: "100%", width: "100%", cursor: isCenterPointerMode ? 'none' : undefined }}
         >
             {/* ✅ PERBAIKAN DI SINI: wasd-controls="enabled: false" */}
             <a-camera
