@@ -24,7 +24,7 @@ export default function PointerOverlay() {
         canvas.requestPointerLock = canvas.requestPointerLock || 
                                      canvas.mozRequestPointerLock || 
                                      canvas.webkitRequestPointerLock;
-        
+        //test
         const requestLock = () => {
           if (canvas.requestPointerLock) {
             canvas.requestPointerLock();
