@@ -33,17 +33,19 @@ export default function MainScene({ children }) {
         embedded
         vr-mode-ui="enabled: false"
         device-orientation-permission-ui="enabled: false"
+        renderer="antialias: true; colorManagement: true; sortObjects: true; physicallyCorrectLights: true; maxCanvasWidth: 1920; maxCanvasHeight: 1920"
         style={{
           height: "100vh",
           width: "100vw",
         }}
       >
-        {/* Camera tanpa WASD controls, hanya look-controls */}
+        {/* Camera dengan look-controls yang smooth dan sensitivitas rendah */}
         <a-camera
-          look-controls="enabled: true"
+          look-controls="enabled: true; reverseMouseDrag: false; touchEnabled: true; magicWindowTrackingEnabled: true; pointerLockEnabled: false; smoothingFactor: 0.85; mouseSensitivity: 0.3; touchSensitivity: 0.3"
           wasd-controls="enabled: false"
           position="0 1.6 0"
           cursor="rayOrigin: mouse"
+          fov="80"
         ></a-camera>
 
         {/* VR Content */}
