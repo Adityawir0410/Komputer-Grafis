@@ -53,15 +53,42 @@ export default function PointerOverlay() {
           }
         };
 
+        // Handle mouse wheel for zoom (FOV control)
+        const handleWheel = (e) => {
+          e.preventDefault();
+          
+          // Get current FOV (convert to number)
+          let currentFov = parseFloat(camera.getAttribute('fov')) || 80;
+          
+          // Adjust FOV based on scroll direction
+          const zoomSpeed = 3;
+          const delta = e.deltaY > 0 ? zoomSpeed : -zoomSpeed;
+          
+          // Calculate new FOV (smaller FOV = more zoom)
+          let newFov = currentFov + delta;
+          
+          // Clamp FOV between safe range: 50 (zoomed in) and 90 (zoomed out)
+          newFov = Math.max(50, Math.min(90, newFov));
+          
+          // Apply new FOV smoothly
+          camera.setAttribute('camera', 'fov', newFov);
+          camera.setAttribute('fov', newFov);
+        };
+
         document.addEventListener('mousemove', handleMouseMove);
+        canvas.addEventListener('wheel', handleWheel, { passive: false });
         
         return () => {
           canvas.removeEventListener('click', requestLock);
           document.removeEventListener('mousemove', handleMouseMove);
+          canvas.removeEventListener('wheel', handleWheel);
           document.body.style.cursor = '';
           if (document.exitPointerLock) {
             document.exitPointerLock();
           }
+          // Reset FOV when leaving
+          camera.setAttribute('camera', 'fov', 80);
+          camera.setAttribute('fov', 80);
         };
       }
     } else {
@@ -70,6 +97,12 @@ export default function PointerOverlay() {
         document.body.style.cursor = '';
         if (document.exitPointerLock) {
           document.exitPointerLock();
+        }
+        // Also reset FOV when exiting pointer mode
+        const camera = document.querySelector('[camera]');
+        if (camera) {
+          camera.setAttribute('camera', 'fov', 80);
+          camera.setAttribute('fov', 80);
         }
       }
     }
@@ -87,6 +120,7 @@ export default function PointerOverlay() {
       <div className="absolute bottom-4 right-4 text-white/80 text-xs bg-black/60 rounded px-2 py-1">
         <div>Click canvas to enable mouse look</div>
         <div>Move mouse to look around</div>
+        <div>Scroll wheel to zoom in/out</div>
         <div className="text-white/60 mt-1">Press ESC to release pointer</div>
       </div>
     </div>
