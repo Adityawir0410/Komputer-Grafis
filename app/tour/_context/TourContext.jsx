@@ -118,18 +118,18 @@ export function TourProvider({ children }) {
   // Fungsi untuk audio timer
   const clearAudioTimer = () => { if (audioTimer.current) clearTimeout(audioTimer.current); };
   const startAudioTimer = (durationInSeconds, posId) => {
-    console.log('startAudioTimer called for pos:', posId, 'visited?', visitedPos[posId]);
+    console.log('startAudioTimer called for pos:', posId, 'audioCompleted?', audioCompleted[posId]);
     
-    // Jika pos sudah pernah dikunjungi, langsung set audio selesai
-    if (visitedPos[posId]) {
-      console.log('Pos', posId, 'already visited, skipping audio');
+    // Jika audio pos sudah pernah selesai, langsung set audio finished
+    if (audioCompleted[posId]) {
+      console.log('Pos', posId, 'audio already completed, skipping audio');
       setIsAudioFinished(true);
       clearAudioTimer();
       return;
     }
     
-    // Jika pos baru, jalankan timer normal
-    console.log('Pos', posId, 'is new, starting audio timer for', durationInSeconds, 'seconds');
+    // Jika audio belum selesai, jalankan timer normal
+    console.log('Pos', posId, 'audio not completed, starting audio timer for', durationInSeconds, 'seconds');
     setIsAudioFinished(false);
     clearAudioTimer();
     audioTimer.current = setTimeout(() => {
@@ -146,11 +146,11 @@ export function TourProvider({ children }) {
       setCurrentPos(posNumber);
       setHighestPosReached(prev => Math.max(prev, posNumber));
       
-      console.log('updateCurrentPos:', posNumber, 'visited?', visitedPos[posNumber]);
+      console.log('updateCurrentPos:', posNumber, 'audioCompleted?', audioCompleted[posNumber]);
       
-      // Jika pos sudah pernah dikunjungi, langsung set audio finished
-      if (visitedPos[posNumber]) {
-        console.log('Setting audio finished for visited pos', posNumber);
+      // Jika audio pos sudah selesai, langsung set audio finished
+      if (audioCompleted[posNumber]) {
+        console.log('Setting audio finished for completed pos', posNumber);
         setIsAudioFinished(true);
       } else {
         setIsAudioFinished(false);
