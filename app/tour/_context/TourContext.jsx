@@ -30,6 +30,7 @@ export function TourProvider({ children }) {
   const [finishButtonClicked, setFinishButtonClicked] = useState(false);
   const [highestPosReached, setHighestPosReached] = useState(0);
   const [isAudioFinished, setIsAudioFinished] = useState(false);
+  const [isCenterPointerMode, setIsCenterPointerMode] = useState(false);
   const audioTimer = useRef(null);
 
   const maxPos = 6;
@@ -149,6 +150,7 @@ export function TourProvider({ children }) {
     resetTour, maxPos, isInitialized,
     isAudioFinished, startAudioTimer, clearAudioTimer,
     navigationMap, // ✅ Ekspor peta navigasi kustom
+    isCenterPointerMode, setIsCenterPointerMode,
   };
 
   return (

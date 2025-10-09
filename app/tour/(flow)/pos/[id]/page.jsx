@@ -9,6 +9,7 @@ import { useTour } from "../../../_context/TourContext";
 
 import VRLoading from "../../../_components/VRLoading";
 import HUD from "../../../_components/HUD";
+import PointerOverlay from "../../../_components/PointerOverlay";
 import Pos1 from "../../../_components/Pos1";
 import Pos2 from "../../../_components/Pos2";
 import Pos3 from "../../../_components/Pos3";
@@ -24,7 +25,7 @@ const AFrameWrapper = dynamic(
 export default function PosPage() {
   const params = useParams();
   const router = useRouter();
-  const { highestPosReached, isInitialized } = useTour();
+  const { highestPosReached, isInitialized, setIsCenterPointerMode } = useTour();
   const currentPosId = parseInt(params.id, 10);
 
   useEffect(() => {
@@ -39,6 +40,12 @@ export default function PosPage() {
       }
     }
   }, [currentPosId, highestPosReached, isInitialized, router]);
+
+  // Default: enable center pointer mode on POS pages
+  useEffect(() => {
+    setIsCenterPointerMode(true);
+    return () => setIsCenterPointerMode(false);
+  }, [setIsCenterPointerMode]);
 
   if (!isInitialized || currentPosId > highestPosReached + 1) {
     return <VRLoading />;
@@ -59,6 +66,7 @@ export default function PosPage() {
   return (
     <div className="relative w-screen h-screen">
       <HUD />
+      <PointerOverlay />
       <AFrameWrapper> 
         {renderPosContent()}
       </AFrameWrapper>
