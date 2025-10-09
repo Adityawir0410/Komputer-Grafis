@@ -6,17 +6,25 @@ import { useEffect } from 'react';
 import { useTour } from '../_context/TourContext';
 
 export default function Pos1() {
-  const { setCurrentPos, startTimer, timerStarted, startAudioTimer } = useTour();
+  const { setCurrentPos, startTimer, timerStarted, startAudioTimer, isAudioFinished, markAudioCompleted } = useTour();
 
   useEffect(() => {
     setCurrentPos(1);
     if (!timerStarted) {
       startTimer();
     }
-    startAudioTimer(29);
+    startAudioTimer(29, 1); // Pass posId sebagai parameter kedua
     
   // ✅ PERBAIKAN UTAMA: Pastikan useEffect hanya berjalan sekali saat komponen dimuat
   }, []);
+  
+  // Mark audio sebagai completed ketika audio selesai (untuk pos non-quiz)
+  useEffect(() => {
+    if (isAudioFinished) {
+      console.log('Audio finished for Pos 1, marking audio as completed');
+      markAudioCompleted(1);
+    }
+  }, [isAudioFinished]);
 
   return (
     <>

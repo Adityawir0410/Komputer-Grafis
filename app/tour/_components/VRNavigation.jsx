@@ -6,12 +6,31 @@ import { useTour } from '../_context/TourContext';
 
 export default function VRNavigation({ currentPosId, maxPos }) {
   const router = useRouter();
-  const { quizCompleted, quizPositions, handleFinishTour, isAudioFinished, navigationMap } = useTour();
+  const { quizCompleted, quizPositions, handleFinishTour, isAudioFinished, navigationMap, markPosAsCompleted } = useTour();
 
   // --- Semua Logika Inti Tetap Sama ---
-  const goToPrevious = () => { if (currentPosId > 1) router.push(`/tour/pos/${currentPosId - 1}`); };
-  const goToNext = () => { if (currentPosId < maxPos) router.push(`/tour/pos/${currentPosId + 1}`); };
-  const goToFinish = () => { handleFinishTour(); router.push('/tour/closing'); };
+  const goToPrevious = () => { 
+    // Mark pos sebagai completed jika audio sudah selesai (dan bukan pos quiz atau quiz sudah selesai)
+    if (isAudioFinished && (!quizPositions.includes(currentPosId) || quizCompleted[currentPosId])) {
+      markPosAsCompleted(currentPosId);
+    }
+    if (currentPosId > 1) router.push(`/tour/pos/${currentPosId - 1}`); 
+  };
+  const goToNext = () => { 
+    // Mark pos sebagai completed jika audio sudah selesai (dan bukan pos quiz atau quiz sudah selesai)
+    if (isAudioFinished && (!quizPositions.includes(currentPosId) || quizCompleted[currentPosId])) {
+      markPosAsCompleted(currentPosId);
+    }
+    if (currentPosId < maxPos) router.push(`/tour/pos/${currentPosId + 1}`); 
+  };
+  const goToFinish = () => { 
+    // Mark pos terakhir sebagai completed
+    if (isAudioFinished && (!quizPositions.includes(currentPosId) || quizCompleted[currentPosId])) {
+      markPosAsCompleted(currentPosId);
+    }
+    handleFinishTour(); 
+    router.push('/tour/closing'); 
+  };
   const isQuizRequired = quizPositions.includes(currentPosId);
   const isCurrentQuizCompleted = quizCompleted[currentPosId];
   const isNextLocked = !isAudioFinished || (isQuizRequired && !isCurrentQuizCompleted);

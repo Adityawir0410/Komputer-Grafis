@@ -13,7 +13,7 @@ export default function Pos5() {
 
   useEffect(() => {
     setCurrentPos(5);
-    startAudioTimer(34); // Durasi untuk Pos 5
+    startAudioTimer(34, 5); // Pass posId sebagai parameter kedua
 
     // ✅ TAMBAHKAN CLEANUP FUNCTION untuk membersihkan timer
     return () => {
