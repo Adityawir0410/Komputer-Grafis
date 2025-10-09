@@ -54,15 +54,17 @@ export default function VRNavigation({ currentPosId, maxPos }) {
           {/* Area klik transparan */}
           <a-plane
             width="2.1" height="0.80" position="0 0 0"
-            color="#111827" opacity="0"
+            color="#000000" opacity="0.01"
+            material="transparent: true; side: double"
             animation__hover={!config.isLocked ? "property: scale; to: 1.08 1.08 1; startEvents: mouseenter; endEvents: mouseleave; dur: 150" : ""}
           ></a-plane>
 
           {/* Grup chevron animasi (3 buah) */}
-          <a-entity position="0 0 0.05">
+          <a-entity position="0 0 0.06">
           {Array.from({ length: 3 }).map((_, i) => {
             const delay = 120 * i;
-            const baseX = -0.20 + i * 0.20; // sesuaikan untuk ikon lebih besar
+            const baseX = -0.20 + i * 0.20;
+            const zOffset = 0.01 + (0.02 * i); // Increased z-spacing to prevent z-fighting
             const encoded = '%23FFFFFF';
             const svg = `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='${encoded}'><path d='M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z'/></svg>`;
             return (
@@ -71,14 +73,14 @@ export default function VRNavigation({ currentPosId, maxPos }) {
                 src={svg}
                 width="0.56"
                 height="0.56"
-                position={`${baseX} 0 ${0.001 * i}`}
-                material="transparent: true; depthTest: false; depthWrite: false"
+                position={`${baseX} 0 ${zOffset}`}
+                material="transparent: true; side: double; alphaTest: 0.1"
                 opacity={config.isLocked ? "0.35" : "1"}
                 animation__fade={config.isLocked ? "" :
                   `property: opacity; from: 0.6; to: 1; dir: alternate; loop: true; dur: 550; delay: ${delay}`
                 }
                 animation__move={config.isLocked ? "" :
-                  `property: position; from: ${baseX - 0.035} 0 0; to: ${baseX + 0.035} 0 0; dir: alternate; loop: true; dur: 550; delay: ${delay}`
+                  `property: position; from: ${baseX - 0.035} 0 ${zOffset}; to: ${baseX + 0.035} 0 ${zOffset}; dir: alternate; loop: true; dur: 550; delay: ${delay}`
                 }
               ></a-image>
             );
