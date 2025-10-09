@@ -99,10 +99,10 @@ export default function VRNavigation({ currentPosId, maxPos }) {
             value={side === 'left' ? '<<<' : '>>>'}
             position="0 0 0.09"
             align="center"
-            color="#FFFFFF"
+            color={config.isLocked ? "#9CA3AF" : "#FFFFFF"}
             width="10"
             letterSpacing="3"
-            material={`shader: flat; transparent: true; opacity: ${config.isLocked ? 0.4 : 1}`}
+            material={`shader: flat; transparent: true; opacity: ${config.isLocked ? 0.6 : 1}`}
             animation__fade={config.isLocked ? "" :
               `property: material.opacity; from: 0.7; to: 1; dir: alternate; loop: true; dur: 1100; easing: easeInOutQuad`
             }
