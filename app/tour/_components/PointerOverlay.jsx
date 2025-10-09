@@ -53,29 +53,11 @@ export default function PointerOverlay() {
           }
         };
 
-        // Prevent ESC from exiting pointer lock - request lock again
-        const handlePointerLockChange = () => {
-          if (!document.pointerLockElement && isPointerMode) {
-            // Re-request pointer lock if we're still in pointer mode
-            setTimeout(() => {
-              if (canvas.requestPointerLock) {
-                canvas.requestPointerLock();
-              }
-            }, 100);
-          }
-        };
-
         document.addEventListener('mousemove', handleMouseMove);
-        document.addEventListener('pointerlockchange', handlePointerLockChange);
-        document.addEventListener('mozpointerlockchange', handlePointerLockChange);
-        document.addEventListener('webkitpointerlockchange', handlePointerLockChange);
         
         return () => {
           canvas.removeEventListener('click', requestLock);
           document.removeEventListener('mousemove', handleMouseMove);
-          document.removeEventListener('pointerlockchange', handlePointerLockChange);
-          document.removeEventListener('mozpointerlockchange', handlePointerLockChange);
-          document.removeEventListener('webkitpointerlockchange', handlePointerLockChange);
           document.body.style.cursor = '';
           if (document.exitPointerLock) {
             document.exitPointerLock();
@@ -97,14 +79,15 @@ export default function PointerOverlay() {
 
   return (
     <div className="pointer-events-none fixed inset-0 z-40">
-      {/* Center reticle - stays in the middle */}
+      {/* Center reticle - stays in the middle with blue outline */}
       <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-        <div className="w-4 h-4 rounded-full border-2 border-white/90 shadow-[0_0_8px_rgba(255,255,255,0.6)]" />
+        <div className="w-4 h-4 rounded-full border-2 border-white/90 shadow-[0_0_12px_rgba(59,130,246,0.8)] ring-2 ring-blue-500/60" />
       </div>
       {/* Helper hint */}
       <div className="absolute bottom-4 right-4 text-white/80 text-xs bg-black/60 rounded px-2 py-1">
-        <div>Click canvas to start mouse look</div>
+        <div>Click canvas to enable mouse look</div>
         <div>Move mouse to look around</div>
+        <div className="text-white/60 mt-1">Press ESC to release pointer</div>
       </div>
     </div>
   );
