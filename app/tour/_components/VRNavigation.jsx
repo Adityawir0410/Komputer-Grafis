@@ -49,50 +49,93 @@ export default function VRNavigation({ currentPosId, maxPos }) {
         className={!config.isLocked ? "clickable" : ""}
         onClick={!config.isLocked ? config.action : null}
       >
-        {/* Container diputar -90 derajat pada sumbu X; arah panah mengikuti sisi */}
-        <a-entity rotation={side === 'left' ? "-90 180 0" : "-90 0 0"}>
-          {/* Area klik transparan */}
+        {/* Container diputar -90 derajat pada sumbu X */}
+        <a-entity rotation="-90 0 0">
+          {/* Outer glow/border effect */}
+          <a-rounded
+            width="2.55" height="1.15" radius="0.18" position="0 0 -0.01"
+            color={config.isLocked ? "#374151" : config.color}
+            opacity={config.isLocked ? "0.2" : "0.4"}
+            material="shader: flat; transparent: true"
+            animation__pulse={!config.isLocked ? 
+              `property: scale; from: 1 1 1; to: 1.03 1.03 1; dir: alternate; loop: true; dur: 1500; easing: easeInOutSine` : ""}
+          ></a-rounded>
+
+          {/* Main background dengan rounded corners */}
+          <a-rounded
+            width="2.4" height="1.0" radius="0.15" position="0 0 0"
+            color={config.isLocked ? "#1F2937" : config.color}
+            opacity={config.isLocked ? "0.35" : "0.65"}
+            material="shader: flat; transparent: true"
+            animation__hover={!config.isLocked ? "property: scale; to: 1.08 1.08 1; startEvents: mouseenter; endEvents: mouseleave; dur: 250; easing: easeOutQuad" : ""}
+            animation__glow={!config.isLocked ? 
+              `property: material.opacity; from: 0.55; to: 0.75; dir: alternate; loop: true; dur: 1400; easing: easeInOutSine` : ""}
+          ></a-rounded>
+
+          {/* Inner highlight untuk depth */}
+          <a-rounded
+            width="2.3" height="0.9" radius="0.13" position="0 0.05 0.01"
+            color="#FFFFFF"
+            opacity={config.isLocked ? "0" : "0.1"}
+            material="shader: flat; transparent: true"
+          ></a-rounded>
+
+          {/* Shadow layer untuk depth */}
+          <a-rounded
+            width="2.4" height="1.0" radius="0.15" position="0 -0.05 -0.03"
+            color="#000000" opacity="0.5"
+            material="shader: flat; transparent: true"
+          ></a-rounded>
+
+          {/* Area klik transparan (lebih luas) */}
           <a-plane
-            width="2.1" height="0.80" position="0 0 0"
+            width="2.6" height="1.2" position="0 0 0.02"
             color="#000000" opacity="0.01"
-            material="transparent: true; side: double"
-            animation__hover={!config.isLocked ? "property: scale; to: 1.08 1.08 1; startEvents: mouseenter; endEvents: mouseleave; dur: 150" : ""}
+            material="shader: flat; transparent: true"
           ></a-plane>
 
-          {/* Grup chevron animasi (3 buah) */}
-          <a-entity position="0 0 0.06">
-          {Array.from({ length: 3 }).map((_, i) => {
-            const delay = 120 * i;
-            const baseX = -0.20 + i * 0.20;
-            const zOffset = 0.01 + (0.02 * i); // Increased z-spacing to prevent z-fighting
-            const encoded = '%23FFFFFF';
-            const svg = `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='${encoded}'><path d='M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z'/></svg>`;
-            return (
-              <a-image
-                key={i}
-                src={svg}
-                width="0.56"
-                height="0.56"
-                position={`${baseX} 0 ${zOffset}`}
-                material="transparent: true; side: double; alphaTest: 0.1"
-                opacity={config.isLocked ? "0.35" : "1"}
-                animation__fade={config.isLocked ? "" :
-                  `property: opacity; from: 0.6; to: 1; dir: alternate; loop: true; dur: 550; delay: ${delay}`
-                }
-                animation__move={config.isLocked ? "" :
-                  `property: position; from: ${baseX - 0.035} 0 ${zOffset}; to: ${baseX + 0.035} 0 ${zOffset}; dir: alternate; loop: true; dur: 550; delay: ${delay}`
-                }
-              ></a-image>
-            );
-          })}
-          </a-entity>
+          {/* Simbol panah dengan animasi smooth dan glow */}
+          <a-text
+            value={side === 'left' ? '<<<' : '>>>'}
+            position="0 0 0.09"
+            align="center"
+            color="#FFFFFF"
+            width="10"
+            letterSpacing="3"
+            material={`shader: flat; transparent: true; opacity: ${config.isLocked ? 0.4 : 1}`}
+            animation__fade={config.isLocked ? "" :
+              `property: material.opacity; from: 0.7; to: 1; dir: alternate; loop: true; dur: 1100; easing: easeInOutQuad`
+            }
+            animation__move={config.isLocked ? "" :
+              `property: position; from: ${side === 'left' ? '-0.18' : '0.18'} 0 0.09; to: ${side === 'left' ? '0.18' : '-0.18'} 0 0.09; dir: alternate; loop: true; dur: 1400; easing: easeInOutQuad`
+            }
+            animation__scale={!config.isLocked ? 
+              `property: scale; from: 0.96 0.96 0.96; to: 1.04 1.04 1.04; dir: alternate; loop: true; dur: 1400; easing: easeInOutQuad` : ""}
+          ></a-text>
         </a-entity>
 
-        {/* Label di bawah tombol */}
-        <a-text
-          value={config.label} position="0 -0.2 0" align="center"
-          color={config.labelColor} width="1.8"
-        ></a-text>
+        {/* Label di bawah tombol dengan background */}
+        <a-entity position="0 -0.55 0">
+          {/* Background label */}
+          <a-rounded
+            width="1.4" height="0.35" radius="0.08"
+            color={config.isLocked ? "#374151" : "#1F2937"}
+            opacity={config.isLocked ? "0.4" : "0.6"}
+            material="shader: flat; transparent: true"
+          ></a-rounded>
+          
+          {/* Text label */}
+          <a-text
+            value={config.label}
+            position="0 0 0.02"
+            align="center"
+            color={config.labelColor}
+            width="1.6"
+            material="shader: flat; transparent: true"
+            animation__labelglow={!config.isLocked ? 
+              `property: material.opacity; from: 0.8; to: 1; dir: alternate; loop: true; dur: 1500; easing: easeInOutSine` : ""}
+          ></a-text>
+        </a-entity>
       </a-entity>
     );
   };
