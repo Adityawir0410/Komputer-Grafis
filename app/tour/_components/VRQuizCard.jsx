@@ -145,19 +145,21 @@ export default function VRQuizCard({ isOpen, onClose, posId, position = "0 2 -3"
     <a-entity position={position} visible={isOpen} ui-overlay>
       {/* Subtle drop shadow */}
       <a-plane
-        position="0 -0.03 -0.12"
+        position="0 -0.03 -0.15"
         width="4.6"
         height={outerHeight}
         color="#000000"
         opacity="0.10"
+        material="transparent: true; side: double"
       ></a-plane>
 
       {/* Outer frame */}
       <a-plane
-        position="0 0 -0.11"
+        position="0 0 -0.12"
         width="4.6"
         height={outerHeight}
         color="#E5E7EB"
+        material="side: double"
       ></a-plane>
 
       {/* Main card */}
@@ -167,7 +169,7 @@ export default function VRQuizCard({ isOpen, onClose, posId, position = "0 2 -3"
         height={mainHeight}
         color="#FFFFFF"
         opacity="0.98"
-        material="shader: flat"
+        material="shader: flat; side: double; transparent: true"
         animation="property: scale; from: 0.92 0.92 0.92; to: 1 1 1; dur: 250"
       ></a-plane>
 
@@ -208,12 +210,12 @@ export default function VRQuizCard({ isOpen, onClose, posId, position = "0 2 -3"
               ></a-text>
             </a-entity>
             {/* Progress bar */}
-            <a-plane position={`0 -0.34 0.01`} width={CARD_INNER_WIDTH} height="0.08" color="#EEF2FF"></a-plane>
-            <a-plane position={`${-(CARD_INNER_WIDTH/2) + (progress * CARD_INNER_WIDTH) / 2} -0.34 0.02`} width={Math.max(0.02, progress * CARD_INNER_WIDTH)} height="0.08" color="#3B82F6"></a-plane>
+            <a-plane position={`0 -0.34 0.01`} width={CARD_INNER_WIDTH} height="0.08" color="#EEF2FF" material="side: double"></a-plane>
+            <a-plane position={`${-(CARD_INNER_WIDTH/2) + (progress * CARD_INNER_WIDTH) / 2} -0.34 0.03`} width={Math.max(0.02, progress * CARD_INNER_WIDTH)} height="0.08" color="#3B82F6" material="side: double"></a-plane>
           </a-entity>
 
           {/* Divider */}
-          <a-plane position={`0 ${dividerY} 0.01`} width={CARD_INNER_WIDTH} height="0.01" color="#E5E7EB"></a-plane>
+          <a-plane position={`0 ${dividerY} 0.01`} width={CARD_INNER_WIDTH} height="0.01" color="#E5E7EB" material="side: double"></a-plane>
 
           {/* Question */}
           <a-text
@@ -234,36 +236,40 @@ export default function VRQuizCard({ isOpen, onClose, posId, position = "0 2 -3"
               {/* TRUE */}
               <a-entity position={`0 ${optionsStartY} 0.02`} class="clickable" onClick={() => handleAnswerSelect(0)}>
                 <a-plane
+                  position="0 0 -0.02"
+                  width={CARD_INNER_WIDTH - 0.04}
+                  height={OPTION_HEIGHT + 0.04}
+                  color={selectedAnswer === 0 ? "#3B82F6" : "#E5E7EB"}
+                  material="side: double"
+                ></a-plane>
+                <a-plane
                   position="0 0 0"
                   width={CARD_INNER_WIDTH}
                   height={OPTION_HEIGHT}
                   color={selectedAnswer === 0 ? "#DBEAFE" : "#F9FAFB"}
+                  material="side: double"
                 ></a-plane>
-                <a-plane
-                  position="0 0 -0.01"
-                  width={CARD_INNER_WIDTH - 0.04}
-                  height={OPTION_HEIGHT + 0.04}
-                  color={selectedAnswer === 0 ? "#3B82F6" : "#E5E7EB"}
-                ></a-plane>
-                <a-circle position={`${-(CARD_INNER_WIDTH/2) + 0.2} 0 0.02`} radius="0.09" color={selectedAnswer === 0 ? "#2563EB" : "#9CA3AF"}></a-circle>
-                <a-text value="True" position={`${-(CARD_INNER_WIDTH/2) + 0.45} 0 0.02`} color={selectedAnswer === 0 ? "#FFFFFF" : "#374151"} width={CARD_INNER_WIDTH - 0.8} align="left" wrap-count="28"></a-text>
+                <a-circle position={`${-(CARD_INNER_WIDTH/2) + 0.2} 0 0.03`} radius="0.09" color={selectedAnswer === 0 ? "#2563EB" : "#9CA3AF"} material="side: double"></a-circle>
+                <a-text value="True" position={`${-(CARD_INNER_WIDTH/2) + 0.45} 0 0.04`} color={selectedAnswer === 0 ? "#1F2937" : "#374151"} width={CARD_INNER_WIDTH - 0.8} align="left" wrap-count="28"></a-text>
               </a-entity>
               {/* FALSE */}
               <a-entity position={`0 ${optionsStartY - OPTION_GAP} 0.02`} class="clickable" onClick={() => handleAnswerSelect(1)}>
+                <a-plane
+                  position="0 0 -0.02"
+                  width={CARD_INNER_WIDTH - 0.04}
+                  height={OPTION_HEIGHT + 0.04}
+                  color={selectedAnswer === 1 ? "#3B82F6" : "#E5E7EB"}
+                  material="side: double"
+                ></a-plane>
                 <a-plane
                   position="0 0 0"
                   width={CARD_INNER_WIDTH}
                   height={OPTION_HEIGHT}
                   color={selectedAnswer === 1 ? "#DBEAFE" : "#F9FAFB"}
+                  material="side: double"
                 ></a-plane>
-                <a-plane
-                  position="0 0 -0.01"
-                  width={CARD_INNER_WIDTH - 0.04}
-                  height={OPTION_HEIGHT + 0.04}
-                  color={selectedAnswer === 1 ? "#3B82F6" : "#E5E7EB"}
-                ></a-plane>
-                <a-circle position={`${-(CARD_INNER_WIDTH/2) + 0.2} 0 0.02`} radius="0.09" color={selectedAnswer === 1 ? "#2563EB" : "#9CA3AF"}></a-circle>
-                <a-text value="False" position={`${-(CARD_INNER_WIDTH/2) + 0.45} 0 0.02`} color={selectedAnswer === 1 ? "#FFFFFF" : "#374151"} width={CARD_INNER_WIDTH - 0.8} align="left" wrap-count="28"></a-text>
+                <a-circle position={`${-(CARD_INNER_WIDTH/2) + 0.2} 0 0.03`} radius="0.09" color={selectedAnswer === 1 ? "#2563EB" : "#9CA3AF"} material="side: double"></a-circle>
+                <a-text value="False" position={`${-(CARD_INNER_WIDTH/2) + 0.45} 0 0.04`} color={selectedAnswer === 1 ? "#1F2937" : "#374151"} width={CARD_INNER_WIDTH - 0.8} align="left" wrap-count="28"></a-text>
               </a-entity>
             </>
           ) : (
@@ -273,11 +279,11 @@ export default function VRQuizCard({ isOpen, onClose, posId, position = "0 2 -3"
               const letter = String.fromCharCode(65 + index);
               return (
                 <a-entity key={index} position={`0 ${y} 0.02`} class="clickable" onClick={() => handleAnswerSelect(index)}>
-                  <a-plane position="0 0 0" width={CARD_INNER_WIDTH} height={OPTION_HEIGHT} color={isSel ? "#DBEAFE" : "#F9FAFB"}></a-plane>
-                  <a-plane position="0 0 -0.01" width={CARD_INNER_WIDTH - 0.04} height={OPTION_HEIGHT + 0.04} color={isSel ? "#3B82F6" : "#E5E7EB"}></a-plane>
-                  <a-circle position={`${-(CARD_INNER_WIDTH/2) + 0.2} 0 0.02`} radius="0.1" color={isSel ? "#2563EB" : "#9CA3AF"}></a-circle>
-                  <a-text value={letter} position={`${-(CARD_INNER_WIDTH/2) + 0.2} 0 0.03`} color="#FFFFFF" width="6" align="center"></a-text>
-                  <a-text value={option} position={`${-(CARD_INNER_WIDTH/2) + 0.45} 0 0.02`} color={isSel ? "#FFFFFF" : "#374151"} width={CARD_INNER_WIDTH - 0.8} wrap-count="32" align="left"></a-text>
+                  <a-plane position="0 0 -0.02" width={CARD_INNER_WIDTH - 0.04} height={OPTION_HEIGHT + 0.04} color={isSel ? "#3B82F6" : "#E5E7EB"} material="side: double"></a-plane>
+                  <a-plane position="0 0 0" width={CARD_INNER_WIDTH} height={OPTION_HEIGHT} color={isSel ? "#DBEAFE" : "#F9FAFB"} material="side: double"></a-plane>
+                  <a-circle position={`${-(CARD_INNER_WIDTH/2) + 0.2} 0 0.03`} radius="0.1" color={isSel ? "#2563EB" : "#9CA3AF"} material="side: double"></a-circle>
+                  <a-text value={letter} position={`${-(CARD_INNER_WIDTH/2) + 0.2} 0 0.04`} color="#FFFFFF" width="6" align="center"></a-text>
+                  <a-text value={option} position={`${-(CARD_INNER_WIDTH/2) + 0.45} 0 0.04`} color={isSel ? "#1F2937" : "#374151"} width={CARD_INNER_WIDTH - 0.8} wrap-count="32" align="left"></a-text>
                 </a-entity>
               );
             })
@@ -287,9 +293,9 @@ export default function VRQuizCard({ isOpen, onClose, posId, position = "0 2 -3"
           <a-entity position={`0 ${buttonsY} 0.02`}>
             {/* Cancel */}
             <a-entity position="-1.25 0 0" class="clickable" onClick={onClose}>
-              <a-plane position="0 0 0" width="1.4" height="0.32" color="#E5E7EB"></a-plane>
-              <a-plane position="0 0 -0.01" width="1.44" height="0.36" color="#9CA3AF"></a-plane>
-              <a-text value="Cancel" position="0 0 0.02" color="#FFFFFF" width="5" align="center"></a-text>
+              <a-plane position="0 0 -0.02" width="1.44" height="0.36" color="#9CA3AF" material="side: double"></a-plane>
+              <a-plane position="0 0 0" width="1.4" height="0.32" color="#E5E7EB" material="side: double"></a-plane>
+              <a-text value="Cancel" position="0 0 0.03" color="#FFFFFF" width="5" align="center"></a-text>
             </a-entity>
             {/* Next / Finish */}
             <a-entity
@@ -297,11 +303,11 @@ export default function VRQuizCard({ isOpen, onClose, posId, position = "0 2 -3"
               class={selectedAnswer !== null ? "clickable" : ""}
               onClick={selectedAnswer !== null ? handleNextQuestion : undefined}
             >
-              <a-plane position="0 0 0" width="1.6" height="0.32" color={selectedAnswer !== null ? "#3B82F6" : "#D1D5DB"}></a-plane>
-              <a-plane position="0 0 -0.01" width="1.64" height="0.36" color={selectedAnswer !== null ? "#2563EB" : "#9CA3AF"}></a-plane>
+              <a-plane position="0 0 -0.02" width="1.64" height="0.36" color={selectedAnswer !== null ? "#2563EB" : "#9CA3AF"} material="side: double"></a-plane>
+              <a-plane position="0 0 0" width="1.6" height="0.32" color={selectedAnswer !== null ? "#3B82F6" : "#D1D5DB"} material="side: double"></a-plane>
               <a-text
                 value={currentQuestion < questions.length - 1 ? "Next" : "Finish"}
-                position="0 0 0.02"
+                position="0 0 0.03"
                 color="#FFFFFF"
                 width="6"
                 align="center"
@@ -346,9 +352,9 @@ export default function VRQuizCard({ isOpen, onClose, posId, position = "0 2 -3"
           ></a-text>
 
           <a-entity position="0 -0.9 0.01" class="clickable" onClick={handleCloseQuiz}>
-            <a-plane position="0 0 0" width="2.2" height="0.42" color="#3B82F6"></a-plane>
-            <a-plane position="0 0 -0.01" width="2.25" height="0.46" color="#2563EB"></a-plane>
-            <a-text value="Continue" position="0 0 0.02" color="#FFFFFF" width="6" align="center"></a-text>
+            <a-plane position="0 0 -0.02" width="2.25" height="0.46" color="#2563EB" material="side: double"></a-plane>
+            <a-plane position="0 0 0" width="2.2" height="0.42" color="#3B82F6" material="side: double"></a-plane>
+            <a-text value="Continue" position="0 0 0.03" color="#FFFFFF" width="6" align="center"></a-text>
           </a-entity>
         </>
       )}

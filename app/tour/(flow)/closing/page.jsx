@@ -7,6 +7,7 @@ import { useTour } from "../../_context/TourContext";
 import { useAuth } from "../../../_context/AuthContext";
 import { useEffect, useRef, useState } from "react";
 import VRLoading from "../../_components/VRLoading";
+import PointerOverlay from "../../_components/PointerOverlay";
 
 const AFrameWrapper = dynamic(
   () => import('../../../_components/AFrameWrapper'),
@@ -15,7 +16,7 @@ const AFrameWrapper = dynamic(
 
 export default function ClosingPage() {
   // ... (semua logika hooks Anda tetap sama)
-  const { totalScore, completeTourAndReset, formatTime, timeRemaining } = useTour();
+  const { totalScore, completeTourAndReset, formatTime, timeRemaining, setIsCenterPointerMode } = useTour();
   const { user } = useAuth();
   const [saveStatus, setSaveStatus] = useState('pending');
   const router = useRouter();
@@ -51,6 +52,12 @@ export default function ClosingPage() {
     saveResult();
   }, [user, totalScore, timeRemaining]);
 
+  // Default: enable center pointer mode on Closing page
+  useEffect(() => {
+    setIsCenterPointerMode(true);
+    return () => setIsCenterPointerMode(false);
+  }, [setIsCenterPointerMode]);
+
   const handleReturnHome = () => {
     completeTourAndReset();
     router.push('/');
@@ -66,6 +73,7 @@ export default function ClosingPage() {
       />
       
       <AFrameWrapper>
+        <PointerOverlay />
         <a-sky src="/images/360/loby-ipal-sier-360.jpg" rotation="0 -80 0" color="#ECEFF1" />
         <a-entity position="0 1.8 -3">
           

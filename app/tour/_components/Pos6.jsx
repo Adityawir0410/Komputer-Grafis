@@ -7,17 +7,25 @@ import VRNavigation from './VRNavigation';
 
 export default function Pos6() {
   // ✅ Ambil fungsi clearAudioTimer
-  const { setCurrentPos, startAudioTimer, clearAudioTimer } = useTour();
+  const { setCurrentPos, startAudioTimer, clearAudioTimer, isAudioFinished, markAudioCompleted } = useTour();
 
   useEffect(() => {
     setCurrentPos(6);
-    startAudioTimer(31); // Durasi untuk Pos 6
+    startAudioTimer(31, 6); // Pass posId sebagai parameter kedua
 
     // ✅ TAMBAHKAN CLEANUP FUNCTION untuk membersihkan timer
     return () => {
       clearAudioTimer();
     };
   }, []); // ✅ Pastikan dependency array kosong
+  
+  // Mark audio sebagai completed ketika audio selesai (untuk pos non-quiz)
+  useEffect(() => {
+    if (isAudioFinished) {
+      console.log('Audio finished for Pos 6, marking audio as completed');
+      markAudioCompleted(6);
+    }
+  }, [isAudioFinished]);
 
   return (
     <>

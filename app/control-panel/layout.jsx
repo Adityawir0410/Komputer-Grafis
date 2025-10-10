@@ -15,26 +15,35 @@ export default function ControlPanelLayout({ children }) {
   const pathname = usePathname();
 
   useEffect(() => {
+    let unsub = null;
     const checkUser = async () => {
       const { data: { session } } = await supabase.auth.getSession();
-      
       if (session) {
         setUser(session.user);
+        setLoading(false);
       } else if (pathname !== '/control-panel/login') {
-        router.push('/control-panel/login');
+        setUser(null);
+        // Delay sebelum set loading false untuk memastikan redirect terjadi
+        router.replace('/control-panel/login');
+        // Tetap loading sampai redirect selesai
+        setTimeout(() => setLoading(false), 100);
+      } else {
+        setLoading(false);
       }
-      setLoading(false);
     };
     checkUser();
 
     const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
       if (!session && pathname !== '/control-panel/login') {
-        router.push('/control-panel/login');
+        setUser(null);
+        router.replace('/control-panel/login');
+      } else if (session) {
+        setUser(session.user);
       }
     });
-
+    unsub = authListener.subscription.unsubscribe;
     return () => {
-      authListener.subscription.unsubscribe();
+      if (unsub) unsub();
     };
   }, [router, pathname]);
 
@@ -44,14 +53,12 @@ export default function ControlPanelLayout({ children }) {
   };
 
   if (loading) {
+    // Prevent any UI flash until auth check is done
     return (
-      // ✅ Tidak ada ToastContainer di sini
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="inline-flex items-center justify-center w-8 h-8 text-blue-600 mb-4">
-            <Loader2 className="animate-spin h-8 w-8" />
-          </div>
-          <p className="text-gray-600">Memuat...</p>
+          <Loader2 className="h-8 w-8 animate-spin text-blue-600 mx-auto mb-4" />
+          <p className="text-gray-600">Loading...</p>
         </div>
       </div>
     );
@@ -64,6 +71,18 @@ export default function ControlPanelLayout({ children }) {
       <>
         {children}
       </>
+    );
+  }
+
+  // Double check: jika user tidak ada dan bukan di halaman login, jangan render apapun
+  if (!user && pathname !== '/control-panel/login') {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <Loader2 className="h-8 w-8 animate-spin text-blue-600 mx-auto mb-4" />
+          <p className="text-gray-600">Redirecting to login...</p>
+        </div>
+      </div>
     );
   }
 
