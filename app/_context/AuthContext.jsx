@@ -23,10 +23,37 @@ export function AuthProvider({ children }) {
     setIsLoading(false);
   }, []);
 
-  const login = async (username, password) => {
+  const login = async (username, password, isDummy = false) => {
     setIsLoading(true);
     
     try {
+      // Handle dummy login
+      if (isDummy) {
+        // Validasi kredensial dummy
+        if (username === '123456789' && password === 'testing123') {
+          const dummyUserData = {
+            nim: '123456789',
+            fullName: 'Testing',
+            email: 'testing@example.com',
+            fakultas: 'Testing',
+            programStudi: 'Testing',
+            loginTime: new Date().toISOString(),
+            isDummy: true
+          };
+          
+          setUser(dummyUserData);
+          Cookies.set('user', JSON.stringify(dummyUserData), { expires: 1 });
+          
+          toast.success(`Selamat datang, ${dummyUserData.fullName}! (Akun Testing)`);
+          
+          return { success: true };
+        } else {
+          toast.error('NIM atau Password akun testing salah!');
+          return { success: false, message: 'Invalid dummy credentials' };
+        }
+      }
+
+      // Handle normal login
       const response = await fetch('/api/auth/login', {
         method: 'POST',
         headers: {
@@ -44,7 +71,8 @@ export function AuthProvider({ children }) {
           email: data.user.email,
           fakultas: data.user.fakultas,
           programStudi: data.user.programStudi,
-          loginTime: new Date().toISOString()
+          loginTime: new Date().toISOString(),
+          isDummy: false
         };
         
         setUser(userData);

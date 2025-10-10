@@ -11,7 +11,7 @@ export default function Pos4() {
 
   useEffect(() => {
     setCurrentPos(4);
-    startAudioTimer(28, 4); // Pass posId sebagai parameter kedua
+    startAudioTimer(22, 4); // Pass posId sebagai parameter kedua (durasi 22 detik)
 
     // ✅ TAMBAHKAN CLEANUP FUNCTION untuk membersihkan timer
     return () => {
@@ -34,7 +34,7 @@ export default function Pos4() {
       
       {/* SFX: Pos 4 - Sludge Distribution */}
       <audio
-        src="/sounds/sfx_5_sludge Distribution.MP3"
+        src="/sounds/AudioSpeedUp/sfx_5_sludge Distribution.mp3"
         autoPlay
         preload="auto"
         playsInline

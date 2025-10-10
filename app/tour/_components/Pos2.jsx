@@ -13,7 +13,7 @@ export default function Pos2() {
 
   useEffect(() => {
     setCurrentPos(2);
-    startAudioTimer(28, 2); // Pass posId sebagai parameter kedua
+    startAudioTimer(22, 2); // Pass posId sebagai parameter kedua (durasi 22 detik)
     
     // ✅ TAMBAHKAN CLEANUP FUNCTION untuk membersihkan timer
     return () => {
@@ -49,7 +49,7 @@ export default function Pos2() {
       
       {/* SFX: Pos 2 - Settling Tank */}
       <audio
-        src="/sounds/sfx_3_Settling Tank.MP3"
+        src="/sounds/AudioSpeedUp/sfx_3_Settling Tank.mp3"
         autoPlay
         preload="auto"
         playsInline

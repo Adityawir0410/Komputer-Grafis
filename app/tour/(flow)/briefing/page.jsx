@@ -7,7 +7,7 @@ export default function BriefingPage() {
     <div className="relative w-full h-screen">
       {/* SFX: welcoming sound on briefing page */}
       <audio
-        src="/sounds/sfx_1_wellcoming.MP3"
+        src="/sounds/AudioSpeedUp/sfx_1_wellcoming.mp3"
         autoPlay
         preload="auto"
         playsInline

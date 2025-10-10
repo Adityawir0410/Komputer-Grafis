@@ -13,7 +13,7 @@ export default function Pos1() {
     if (!timerStarted) {
       startTimer();
     }
-    startAudioTimer(29, 1); // Pass posId sebagai parameter kedua
+    startAudioTimer(23, 1); // Pass posId sebagai parameter kedua (durasi 23 detik)
     
   // ✅ PERBAIKAN UTAMA: Pastikan useEffect hanya berjalan sekali saat komponen dimuat
   }, []);
@@ -32,7 +32,7 @@ export default function Pos1() {
       <a-sky src="/images/360/pos1-360.jpg" rotation="-2 -80 0" />
 
       {/* SFX: Pos 1 - Collection Tank */}
-      <audio src="/sounds/sfx_2_Collection Tank.MP3" autoPlay preload="auto" playsInline />
+      <audio src="/sounds/AudioSpeedUp/sfx_2_Collection Tank.mp3" autoPlay preload="auto" playsInline />
 
       <a-plane position="0 3 -3.05" width="5.5" height="1.2" color="#fff" opacity="0.75" material="side: double; transparent: true" />
       <a-text value={"Pos 1\nCollection Tank & Pumping Stage"} position="0 3 -3" align="center" color="#1F2937" width="6" side="double"></a-text>
