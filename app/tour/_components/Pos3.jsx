@@ -13,7 +13,7 @@ export default function Pos3() {
 
   useEffect(() => {
     setCurrentPos(3);
-    startAudioTimer(34, 3); // Pass posId sebagai parameter kedua
+    startAudioTimer(27, 3); // Pass posId sebagai parameter kedua (durasi 27 detik)
     
     // ✅ TAMBAHKAN CLEANUP FUNCTION untuk membersihkan timer
     return () => {
@@ -28,7 +28,7 @@ export default function Pos3() {
       
       {/* SFX: Pos 3 - Oxidation Ditch */}
       <audio
-        src="/sounds/sfx_4_Oxidation Ditch.MP3"
+        src="/sounds/AudioSpeedUp/sfx_4_Oxidation Ditch.mp3"
         autoPlay
         preload="auto"
         playsInline

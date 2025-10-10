@@ -11,7 +11,7 @@ export default function Pos6() {
 
   useEffect(() => {
     setCurrentPos(6);
-    startAudioTimer(31, 6); // Pass posId sebagai parameter kedua
+    startAudioTimer(25, 6); // Pass posId sebagai parameter kedua (durasi 25 detik)
 
     // ✅ TAMBAHKAN CLEANUP FUNCTION untuk membersihkan timer
     return () => {
@@ -34,7 +34,7 @@ export default function Pos6() {
 
       {/* SFX: Pos 6 - Effluent Tank */}
       <audio
-        src="/sounds/sfx_7_Effluent Tank.MP3"
+        src="/sounds/AudioSpeedUp/sfx_7_Effluent Tank.mp3"
         autoPlay
         preload="auto"
         playsInline

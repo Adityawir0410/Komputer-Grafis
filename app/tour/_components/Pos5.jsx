@@ -13,7 +13,7 @@ export default function Pos5() {
 
   useEffect(() => {
     setCurrentPos(5);
-    startAudioTimer(34, 5); // Pass posId sebagai parameter kedua
+    startAudioTimer(28, 5); // Pass posId sebagai parameter kedua (durasi 28 detik)
 
     // ✅ TAMBAHKAN CLEANUP FUNCTION untuk membersihkan timer
     return () => {
@@ -28,7 +28,7 @@ export default function Pos5() {
       
       {/* SFX: Pos 5 - Secondary Clarifier */}
       <audio
-        src="/sounds/sfx_6_Secondary Clarifier.MP3"
+        src="/sounds/AudioSpeedUp/sfx_6_Secondary Clarifier.mp3"
         autoPlay
         preload="auto"
         playsInline
