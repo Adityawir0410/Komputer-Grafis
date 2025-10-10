@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 export default function LoginModal({ isOpen, onClose, onSuccess }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [loginMode, setLoginMode] = useState('ub'); // 'ub' or 'dummy'
   const { login, isLoading } = useAuth();
 
   const handleSubmit = async (e) => {
@@ -16,7 +17,9 @@ export default function LoginModal({ isOpen, onClose, onSuccess }) {
       return;
     }
 
-    const result = await login(username, password);
+    // Untuk akun dummy, kirim flag isDummy = true
+    const isDummy = loginMode === 'dummy';
+    const result = await login(username, password, isDummy);
     
     if (result.success) {
       setUsername('');
@@ -26,10 +29,23 @@ export default function LoginModal({ isOpen, onClose, onSuccess }) {
     }
   };
 
+  const handleModeChange = (mode) => {
+    setLoginMode(mode);
+    // Set default values untuk akun testing
+    if (mode === 'dummy') {
+      setUsername('123456789');
+      setPassword('testing123');
+    } else {
+      setUsername('');
+      setPassword('');
+    }
+  };
+
   const handleClose = () => {
     if (!isLoading) {
       setUsername('');
       setPassword('');
+      setLoginMode('ub');
       onClose();
     }
   };
@@ -49,7 +65,7 @@ export default function LoginModal({ isOpen, onClose, onSuccess }) {
         {/* Header */}
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-bold text-gray-900">
-            Login SSO Universitas Brawijaya
+            {loginMode === 'ub' ? 'Login SSO Universitas Brawijaya' : 'Login Akun Testing'}
           </h2>
           <button
             onClick={handleClose}
@@ -59,6 +75,34 @@ export default function LoginModal({ isOpen, onClose, onSuccess }) {
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
+          </button>
+        </div>
+
+        {/* Login Mode Tabs */}
+        <div className="flex gap-2 mb-4">
+          <button
+            type="button"
+            onClick={() => handleModeChange('ub')}
+            disabled={isLoading}
+            className={`flex-1 px-4 py-2 rounded-md font-medium transition-colors ${
+              loginMode === 'ub'
+                ? 'bg-blue-600 text-white'
+                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+            } disabled:opacity-50 disabled:cursor-not-allowed`}
+          >
+            Akun UB
+          </button>
+          <button
+            type="button"
+            onClick={() => handleModeChange('dummy')}
+            disabled={isLoading}
+            className={`flex-1 px-4 py-2 rounded-md font-medium transition-colors ${
+              loginMode === 'dummy'
+                ? 'bg-green-600 text-white'
+                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+            } disabled:opacity-50 disabled:cursor-not-allowed`}
+          >
+            Akun Testing
           </button>
         </div>
 
@@ -73,7 +117,7 @@ export default function LoginModal({ isOpen, onClose, onSuccess }) {
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              placeholder="Masukkan NIM Anda"
+              placeholder={loginMode === 'ub' ? 'Masukkan NIM Anda' : '123456789'}
               disabled={isLoading}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed text-black"
               required
@@ -89,18 +133,28 @@ export default function LoginModal({ isOpen, onClose, onSuccess }) {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="Masukkan Password Anda"
+              placeholder={loginMode === 'ub' ? 'Masukkan Password Anda' : 'testing123'}
               disabled={isLoading}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed text-black"
               required
             />
           </div>
 
+          {loginMode === 'dummy' && (
+            <div className="bg-green-50 border border-green-200 rounded-md p-3">
+              <p className="text-xs text-green-700">
+                <span className="font-semibold">💡 Info:</span> Gunakan NIM <span className="font-mono bg-green-100 px-1 rounded">123456789</span> dan password <span className="font-mono bg-green-100 px-1 rounded">testing123</span> atau ubah sesuai kebutuhan testing Anda
+              </p>
+            </div>
+          )}
+
           <div className="pt-4">
             <button
               type="submit"
               disabled={isLoading || !username.trim() || !password.trim()}
-              className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
+              className={`w-full ${
+                loginMode === 'ub' ? 'bg-blue-600 hover:bg-blue-700 focus:ring-blue-500' : 'bg-green-600 hover:bg-green-700 focus:ring-green-500'
+              } text-white py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors`}
             >
               {isLoading ? (
                 <div className="flex items-center justify-center">
@@ -119,7 +173,7 @@ export default function LoginModal({ isOpen, onClose, onSuccess }) {
 
         <div className="mt-4 text-center">
           <p className="text-xs text-gray-500">
-            Gunakan NIM dan password SSO UB Anda
+            {loginMode === 'ub' ? 'Gunakan NIM dan password UB' : 'Akun testing untuk keperluan development'}
           </p>
         </div>
       </div>

@@ -66,7 +66,7 @@ export default function ClosingPage() {
   return (
     <div className="w-screen h-screen">
       <audio
-        src="/sounds/sfx_9_Closing.MP3"
+        src="/sounds/AudioSpeedUp/sfx_9_Closing.mp3"
         autoPlay
         preload="auto"
         playsInline
