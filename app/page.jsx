@@ -1,23 +1,47 @@
-// app/page.jsx
-import Image from "next/image";
-import Link from "next/link";
+// File: app/page.jsx
+
+"use client";
+import { useState } from "react";
+import dynamic from "next/dynamic"; // <-- 1. Import 'dynamic'
+import { useAuth } from "./_context/AuthContext";
+import LoginModal from "./_components/LoginModal";
+import ProfileModal from "./_components/ProfileModal";
+import Sidebar from "./_components/Sidebar";
+
+// 2. Impor komponen A-Frame secara dinamis (hanya render di client)
+const LobbyScene = dynamic(
+  () => import('./_components/LobbyScene'),
+  { 
+    ssr: false, // <-- Ini kuncinya
+    loading: () => <div className="flex-grow h-screen bg-black" /> // Tampilan saat loading
+  }
+);
 
 export default function Home() {
-  return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image className="dark:invert" src="/next.svg" alt="Next.js" width={180} height={38} priority />
-        <h1 className="font-bold text-xl">Virtual Wastewater Treatment Plant</h1>
-        <p className="mb-6 text-center">Explore the process in VR</p>
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [showProfileModal, setShowProfileModal] = useState(false);
 
-        {/* ini yang penting */}
-        <Link
-          href="/tour/briefing"
-          className="rounded-full bg-blue-600 text-white px-6 py-3 hover:bg-blue-700 transition-colors"
-        >
-          Start Tour
-        </Link>
-      </main>
-    </div>
+  const handleLoginClick = () => setShowLoginModal(true);
+  const handleProfileClick = () => setShowProfileModal(true);
+  const handleLoginSuccess = () => setShowLoginModal(false);
+  const handleProfileConfirm = () => {
+    setShowProfileModal(false);
+    setTimeout(() => { window.location.href = '/tour/briefing'; }, 500);
+  };
+
+  return (
+    <>
+      <div className="min-h-screen flex">
+        <Sidebar 
+          onLoginClick={handleLoginClick}
+          onProfileClick={handleProfileClick}
+        />
+        {/* 3. Panggil komponen yang sudah aman, bukan <MainContent> lagi */}
+        <LobbyScene />
+      </div>
+      
+      <ProfileModal isOpen={showProfileModal} onClose={() => setShowProfileModal(false)} onConfirm={handleProfileConfirm} />
+      <LoginModal isOpen={showLoginModal} onClose={() => setShowLoginModal(false)} onSuccess={handleLoginSuccess} />
+    </>
   );
 }

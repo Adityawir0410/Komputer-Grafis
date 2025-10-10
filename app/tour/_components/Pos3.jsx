@@ -1,63 +1,99 @@
+// File: app/tour/_components/Pos3.jsx
+
 "use client";
+import { useState, useEffect } from 'react';
+import { useTour } from '../_context/TourContext';
+import VRQuizCard from './VRQuizCard';
+import VRNavigation from './VRNavigation';
 
 export default function Pos3() {
+  const [showQuiz, setShowQuiz] = useState(false);
+  // ✅ Ambil fungsi clearAudioTimer
+  const { setCurrentPos, quizCompleted, startAudioTimer, clearAudioTimer } = useTour();
+
+  useEffect(() => {
+    setCurrentPos(3);
+    startAudioTimer(34, 3); // Pass posId sebagai parameter kedua
+    
+    // ✅ TAMBAHKAN CLEANUP FUNCTION untuk membersihkan timer
+    return () => {
+      clearAudioTimer();
+    };
+  }, []); // ✅ Pastikan dependency array kosong
+
   return (
     <>
-      {/* Konten VR untuk Pos 3 */}
-      <a-box 
-        position="0 1 -3" 
-        rotation="0 45 0" 
-        color="#DC2626"
-        animation="property: rotation; to: 0 405 0; loop: true; dur: 10000"
-      >
+      {/* 360 Background for Pos 3 */}
+      <a-sky src="/images/360/pos3-360.jpg" rotation="0 -120 0" />
+      
+      {/* SFX: Pos 3 - Oxidation Ditch */}
+      <audio
+        src="/sounds/sfx_4_Oxidation Ditch.MP3"
+        autoPlay
+        preload="auto"
+        playsInline
+      />
+
+      {/* Title wrapped in an entity for animation */}
+      <a-entity scale={showQuiz ? "0 0 0" : "1 1 1"}>
+        <a-animation attribute="scale" dur="300" ease="ease-in-out"></a-animation>
+        
+        <a-plane
+          position="0 3 -3.05"
+          width="5"
+          height="1.2"
+          color="#F3F4F6"
+          opacity="0.85"
+          material="side: double; transparent: true"
+        ></a-plane>
+        
         <a-text 
-          value="POS 3" 
-          position="0 1 0.6" 
+          value="Pos 3\nOxidation Ditch" 
+          position="0 3 -3" 
           align="center" 
-          color="white"
+          color="#1F2937"
+          width="6"
+        ></a-text>
+      </a-entity>
+
+      {/* Quiz Circle wrapped for positioning & rotation */}
+      <a-entity position="4 1.5 -3" rotation="-10 -45 0">
+        <a-circle
+          position="0 0.4 0"
+          radius="0.4"
+          color={quizCompleted[3] ? "#10B981" : "#3B82F6"}
+          className="clickable"
+          onClick={() => !quizCompleted[3] && setShowQuiz(true)}
+          animation={!quizCompleted[3] ? "property: scale; to: 1.1 1.1 1.1; dir: alternate; loop: true; dur: 1000" : ""}
+        >
+          <a-text
+            value={quizCompleted[3] ? "✓" : "?"}
+            position="0 0 0.01"
+            align="center"
+            color="white"
+            width="8"
+          ></a-text>
+        </a-circle>
+
+        <a-text
+          value="QUIZ"
+          position="0 -0.3 0"
+          align="center"
+          color="#1F2937"
           width="4"
         ></a-text>
-      </a-box>
+      </a-entity>
 
-      {/* Objek unik untuk Pos 3 */}
-      <a-cone 
-        position="0 1 -4" 
-        radius-bottom="0.8" 
-        height="1.5" 
-        color="#F59E0B"
-        animation="property: scale; to: 1.2 1.2 1.2; dir: alternate; loop: true; dur: 1500"
-      ></a-cone>
+      {/* VR Quiz Card */}
+      <VRQuizCard 
+        isOpen={showQuiz}
+        onClose={() => setShowQuiz(false)}
+        posId={3}
+        position="0 3.5 -3"
+      />
 
-      {/* Tambahan objek untuk Pos 3 */}
-      <a-dodecahedron 
-        position="-2 1 -2" 
-        radius="0.6" 
-        color="#EC4899"
-        animation="property: rotation; to: 360 360 0; loop: true; dur: 6000"
-      ></a-dodecahedron>
-
-      <a-icosahedron 
-        position="2 1 -2" 
-        radius="0.5" 
-        color="#06B6D4"
-        animation="property: position; to: 2 2.5 -2; dir: alternate; loop: true; dur: 1800"
-      ></a-icosahedron>
-
-      {/* Efek partikel */}
-      <a-entity 
-        position="0 3 -3"
-        particle-system="preset: dust; particleCount: 1000; color: #FBBF24"
-      ></a-entity>
-
-      {/* Informasi Pos 3 */}
-      <a-text 
-        value="Pos 3: Final Destination\nSelamat! Anda telah menyelesaikan tour!" 
-        position="0 2.5 -1" 
-        align="center" 
-        color="#1F2937"
-        width="6"
-      ></a-text>
+      {/* ✅ maxPos sudah benar */}
+      <VRNavigation currentPosId={3} maxPos={6} />
     </>
   );
 }
-

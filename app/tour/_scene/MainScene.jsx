@@ -16,6 +16,8 @@ export default function MainScene({ children }) {
     return () => { alive = false; };
   }, []);
 
+
+
   if (!ready) {
     return (
       <div
@@ -29,25 +31,25 @@ export default function MainScene({ children }) {
     <div className="w-full" style={{ height: "calc(100vh - 56px)" }}>
       <a-scene
         embedded
-        vr-mode-ui="enabled: true"
-        renderer="antialias: true"
-        background="color: #ECECEC"
+        vr-mode-ui="enabled: false"
+        device-orientation-permission-ui="enabled: false"
+        renderer="antialias: true; colorManagement: true; sortObjects: true; physicallyCorrectLights: true; maxCanvasWidth: 1920; maxCanvasHeight: 1920"
+        style={{
+          height: "100vh",
+          width: "100vw",
+        }}
       >
-        <a-entity position="0 1.6 0">
-          <a-camera 
-            wasd-controls-enabled="true"
-            look-controls-enabled="true"
-            look-controls="pointerLockEnabled: false; reverseMouseDrag: false; reverseTouchDrag: false; touchEnabled: true; mouseEnabled: true"
-            cursor="rayOrigin: mouse"
-          ></a-camera>
-        </a-entity>
+        {/* Camera dengan look-controls yang smooth dan sensitivitas rendah */}
+        <a-camera
+          look-controls="enabled: true; reverseMouseDrag: false; touchEnabled: true; magicWindowTrackingEnabled: true; pointerLockEnabled: false; smoothingFactor: 0.85; mouseSensitivity: 0.3; touchSensitivity: 0.3"
+          wasd-controls="enabled: false"
+          position="0 1.6 0"
+          cursor="rayOrigin: mouse"
+          fov="80"
+        ></a-camera>
 
+        {/* VR Content */}
         {children}
-
-        <a-entity light="type: ambient; intensity: 0.6"></a-entity>
-        <a-entity light="type: directional; intensity: 0.8" position="0 5 -2"></a-entity>
-        <a-sky color="#f9fafb"></a-sky>
-        <a-plane rotation="-90 0 0" width="30" height="30" color="#e5e7eb"></a-plane>
       </a-scene>
     </div>
   );

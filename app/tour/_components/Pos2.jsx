@@ -1,76 +1,97 @@
+// File: app/tour/_components/Pos2.jsx
+
 "use client";
 import { useState, useEffect } from 'react';
 import { useTour } from '../_context/TourContext';
-import HUD from './HUD';
-import QuizModal from './QuizModal';
+import VRQuizCard from './VRQuizCard';
+import VRNavigation from './VRNavigation';
 
 export default function Pos2() {
   const [showQuiz, setShowQuiz] = useState(false);
-  const { setCurrentPos } = useTour();
+  // ✅ Ambil fungsi clearAudioTimer
+  const { setCurrentPos, quizCompleted, startAudioTimer, clearAudioTimer } = useTour();
 
-  // Set current pos when component mounts
   useEffect(() => {
     setCurrentPos(2);
-  }, [setCurrentPos]);
+    startAudioTimer(28, 2); // Pass posId sebagai parameter kedua
+    
+    // ✅ TAMBAHKAN CLEANUP FUNCTION untuk membersihkan timer
+    return () => {
+      clearAudioTimer();
+    };
+  }, []); // ✅ Pastikan dependency array kosong agar hanya berjalan sekali
 
   return (
     <>
-      {/* VR Content */}
-      <a-box 
-        position="0 1 -3" 
-        rotation="0 45 0" 
-        color="#059669"
-        animation="property: rotation; to: 0 405 0; loop: true; dur: 10000"
-      >
+      {/* 360 Background for Pos 2 */}
+      <a-sky src="/images/360/pos2-360.jpg" rotation="0 -90 0" />
+
+      {/* Title elements wrapped in an entity for animation */}
+      <a-entity scale={showQuiz ? "0 0 0" : "1 1 1"}>
+        <a-animation attribute="scale" dur="300" ease="ease-in-out"></a-animation>
+        <a-plane 
+          position="0 3 -3.05" 
+          width="6.0" 
+          height="1.2" 
+          color="#fff" 
+          opacity="0.75" 
+          material="side: double; transparent: true" 
+        />
         <a-text 
-          value="POS 2" 
-          position="0 1 0.6" 
+          value={"Pos 2\nSedimentation I/Primary Settling Tank"}
+          position="0 3 -3" 
           align="center" 
-          color="white"
+          color="#1F2937"
+          width="5.5"
+          side="double"
+        ></a-text>
+      </a-entity>
+      
+      {/* SFX: Pos 2 - Settling Tank */}
+      <audio
+        src="/sounds/sfx_3_Settling Tank.MP3"
+        autoPlay
+        preload="auto"
+        playsInline
+      />
+      
+      {/* Quiz Circle wrapped for positioning & rotation */}
+      <a-entity position="4 1.5 -3" rotation="-10 -45 0">
+        <a-circle
+          position="0 0.4 0"
+          radius="0.4"
+          color={quizCompleted[2] ? "#10B981" : "#3B82F6"}
+          className="clickable"
+          onClick={() => !quizCompleted[2] && setShowQuiz(true)}
+          animation={!quizCompleted[2] ? "property: scale; to: 1.1 1.1 1.1; dir: alternate; loop: true; dur: 1000" : ""}
+        >
+          <a-text
+            value={quizCompleted[2] ? "✓" : "?"}
+            position="0 0 0.01"
+            align="center"
+            color="white"
+            width="8"
+          ></a-text>
+        </a-circle>
+        <a-text
+          value="QUIZ"
+          position="0 -0.3 0"
+          align="center"
+          color="#1F2937"
           width="4"
         ></a-text>
-      </a-box>
+      </a-entity>
 
-      <a-cylinder 
-        position="2 1 -2" 
-        radius="0.5" 
-        height="1" 
-        color="#10B981"
-        animation="property: rotation; to: 0 360 0; loop: true; dur: 3000"
-      ></a-cylinder>
-
-      <a-octahedron 
-        position="-2 1 -2" 
-        radius="0.6" 
-        color="#F59E0B"
-        animation="property: position; to: -2 2.5 -2; dir: alternate; loop: true; dur: 2500"
-      ></a-octahedron>
-
-      <a-plane 
-        position="0 0.5 -4" 
-        width="2" 
-        height="2" 
-        color="#3B82F6"
-        animation="property: rotation; to: 0 0 360; loop: true; dur: 5000"
-      ></a-plane>
-
-      <a-text 
-        value="Pos 2: Area Interaktif\nLihat objek-objek yang bergerak!" 
-        position="0 2.5 -1" 
-        align="center" 
-        color="#1F2937"
-        width="6"
-      ></a-text>
-
-      {/* HUD Overlay */}
-      <HUD onQuizClick={() => setShowQuiz(true)} />
-
-      {/* Quiz Modal */}
-      <QuizModal 
+      {/* VR Quiz Card */}
+      <VRQuizCard 
         isOpen={showQuiz}
         onClose={() => setShowQuiz(false)}
         posId={2}
+        position="0 3.5 -3"
       />
+
+      {/* ✅ maxPos diubah menjadi 6 */}
+      <VRNavigation currentPosId={2} maxPos={6} />
     </>
   );
 }

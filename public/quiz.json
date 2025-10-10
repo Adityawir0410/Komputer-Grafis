@@ -95,9 +95,639 @@
     {
       "id": 9,
       "question": "Calculate the settling velocity of particles with a diameter of 0.05 cm and a specific gravity of 2.65 in water at a temperature of 20°C.",
-      "type": "calculation",
-      "correct_answer": "0.16 m/s",
-      "explanation": "Menggunakan Stokes' law, settling velocity dihitung sebesar 0.16 m/s."
+      "type": "multiple_choice",
+      "options": [
+        "0.16 m/s",
+        "0.12 m/s",
+        "0.20 m/s",
+        "0.08 m/s"
+      ],
+      "correct_answer": 0,
+      "explanation": "Dengan menggunakan rumus Stokes' law, settling velocity adalah 0.16 m/s."
+    },
+    {
+      "id": 10,
+      "question": "The oxidation ditch is a type of…",
+      "type": "multiple_choice",
+      "options": [
+        "Trickling filter",
+        "Activated sludge system",
+        "Membrane bioreactor",
+        "Septic tank"
+      ],
+      "correct_answer": 1,
+      "explanation": "Oxidation ditch adalah tipe dari activated sludge system."
+    },
+    {
+      "id": 11,
+      "question": "T/F: Microorganisms in the oxidation ditch consume dissolved organics.",
+      "type": "true_false",
+      "correct_answer": true,
+      "explanation": "Benar. Mikroorganisme dalam oxidation ditch mengkonsumsi bahan organik terlarut."
+    },
+    {
+      "id": 12,
+      "question": "Typical hydraulic retention time in an oxidation ditch is…",
+      "type": "multiple_choice",
+      "options": [
+        "30 minutes",
+        "16–36 hours",
+        "12–24 hours",
+        "1–2 days"
+      ],
+      "correct_answer": 1,
+      "explanation": "Hydraulic retention time tipikal dalam oxidation ditch adalah 16–36 hours."
+    },
+    {
+      "id": 13,
+      "question": "The food-to-microorganism (F/M) ratio is defined as…",
+      "type": "multiple_choice",
+      "options": [
+        "Flow rate / volume",
+        "Pounds of BOD per pound of MLSS",
+        "DO/BOD ratio",
+        "Recycle flow / total flow"
+      ],
+      "correct_answer": 1,
+      "explanation": "F/M ratio didefinisikan sebagai pounds of BOD per pound of MLSS."
+    },
+    {
+      "id": 14,
+      "question": "The role of aerators in oxidation ditches is…",
+      "type": "multiple_choice",
+      "options": [
+        "Pump influent",
+        "Skim oil",
+        "Mix and supply oxygen",
+        "Separate solids"
+      ],
+      "correct_answer": 2,
+      "explanation": "Aerator berfungsi untuk mixing dan menyuplai oksigen."
+    },
+    {
+      "id": 15,
+      "question": "T/F: If DO < 1 mg/L, microbial activity decreases significantly.",
+      "type": "true_false",
+      "correct_answer": true,
+      "explanation": "Benar. Jika DO < 1 mg/L, aktivitas mikroba menurun secara signifikan."
+    },
+    {
+      "id": 16,
+      "question": "Bulking sludge is often caused by…",
+      "type": "multiple_choice",
+      "options": [
+        "Sand particles",
+        "Filamentous bacteria",
+        "Grease",
+        "Algae"
+      ],
+      "correct_answer": 1,
+      "explanation": "Bulking sludge sering disebabkan oleh filamentous bacteria."
+    },
+    {
+      "id": 17,
+      "question": "Sludge Volume Index (SVI) = (settled volume × 1000) / MLSS. If 400 mL/30 min with MLSS = 4000 mg/L, the SVI is…",
+      "type": "multiple_choice",
+      "options": [
+        "50",
+        "100",
+        "150",
+        "200"
+      ],
+      "correct_answer": 1,
+      "explanation": "SVI = (400 × 1000) / 4000 = 100."
+    },
+    {
+      "id": 18,
+      "question": "Which kinetic model is used to describe substrate utilization by microbes?",
+      "type": "multiple_choice",
+      "options": [
+        "Darcy's law",
+        "Reynolds equation",
+        "Monod model",
+        "Stokes' law"
+      ],
+      "correct_answer": 2,
+      "explanation": "Monod model digunakan untuk mendeskripsikan substrate utilization oleh mikroba."
+    },
+    {
+      "id": 19,
+      "question": "T/F: Sludge wasting is necessary to control microbial population and maintain system stability.",
+      "type": "true_false",
+      "correct_answer": true,
+      "explanation": "Benar. Sludge wasting diperlukan untuk mengontrol populasi mikroba dan menjaga stabilitas sistem."
+    },
+    {
+      "id": 20,
+      "question": "The main purpose of the secondary clarifier is…",
+      "type": "multiple_choice",
+      "options": [
+        "Add oxygen",
+        "Separate activated sludge from treated water",
+        "Remove grit",
+        "Kill pathogens"
+      ],
+      "correct_answer": 1,
+      "explanation": "Tujuan utama secondary clarifier adalah memisahkan activated sludge dari treated water."
+    },
+    {
+      "id": 21,
+      "question": "T/F: Secondary clarifiers involve flocculent or hindered settling (Type II & III).",
+      "type": "true_false",
+      "correct_answer": true,
+      "explanation": "Benar. Secondary clarifiers melibatkan flocculent atau hindered settling (Type II & III)."
+    },
+    {
+      "id": 22,
+      "question": "Return Activated Sludge (RAS) is sent to…",
+      "type": "multiple_choice",
+      "options": [
+        "Sludge drying beds",
+        "Oxidation ditch",
+        "Primary clarifier",
+        "Effluent tank"
+      ],
+      "correct_answer": 1,
+      "explanation": "Return Activated Sludge (RAS) dikirim ke oxidation ditch."
+    },
+    {
+      "id": 23,
+      "question": "Waste Activated Sludge (WAS) is directed to…",
+      "type": "multiple_choice",
+      "options": [
+        "Oxidation ditch",
+        "Sludge treatment",
+        "Discharged untreated",
+        "Effluent tank"
+      ],
+      "correct_answer": 1,
+      "explanation": "Waste Activated Sludge (WAS) diarahkan ke sludge treatment."
+    },
+    {
+      "id": 24,
+      "question": "If influent flow is too high, what occurs?",
+      "type": "multiple_choice",
+      "options": [
+        "Better performance",
+        "Short-circuiting & sludge washout",
+        "No change",
+        "Increased oxygen transfer"
+      ],
+      "correct_answer": 1,
+      "explanation": "Jika influent flow terlalu tinggi, terjadi short-circuiting & sludge washout."
+    },
+    {
+      "id": 25,
+      "question": "Sludge bulking in secondary clarifiers is caused by…",
+      "type": "multiple_choice",
+      "options": [
+        "Algae",
+        "Filamentous bacteria",
+        "Sand",
+        "Oil & grease"
+      ],
+      "correct_answer": 1,
+      "explanation": "Sludge bulking di secondary clarifiers disebabkan oleh filamentous bacteria."
+    },
+    {
+      "id": 26,
+      "question": "An SVI value above 200 indicates…",
+      "type": "multiple_choice",
+      "options": [
+        "Good settling",
+        "Poor settling",
+        "Normal conditions",
+        "Faster clarification"
+      ],
+      "correct_answer": 1,
+      "explanation": "Nilai SVI di atas 200 menunjukkan poor settling."
+    },
+    {
+      "id": 27,
+      "question": "T/F: Secondary clarifier performance strongly affects effluent BOD/COD quality.",
+      "type": "true_false",
+      "correct_answer": true,
+      "explanation": "Benar. Performa secondary clarifier sangat mempengaruhi kualitas effluent BOD/COD."
+    },
+    {
+      "id": 28,
+      "question": "Typical depth of a circular secondary clarifier is…",
+      "type": "multiple_choice",
+      "options": [
+        "0.5 m",
+        "4–5 m",
+        "10 m",
+        ">15 m"
+      ],
+      "correct_answer": 1,
+      "explanation": "Kedalaman tipikal circular secondary clarifier adalah 4–5 m."
+    },
+    {
+      "id": 29,
+      "question": "T/F: Recycling sludge back to the oxidation ditch maintains the microbial population.",
+      "type": "true_false",
+      "correct_answer": true,
+      "explanation": "Benar. Recycling sludge kembali ke oxidation ditch mempertahankan populasi mikroba."
+    },
+    {
+      "id": 30,
+      "question": "The purpose of chlorination in water treatment is to…",
+      "type": "multiple_choice",
+      "options": [
+        "Remove hardness",
+        "Kill remaining pathogens",
+        "Precipitate dissolved metals",
+        "Improve taste and odor"
+      ],
+      "correct_answer": 1,
+      "explanation": "Tujuan dari chlorination dalam pengolahan air adalah untuk membunuh patogen yang tersisa."
+    },
+    {
+      "id": 31,
+      "question": "T/F: Chlorination can produce harmful disinfection by-products.",
+      "type": "true_false",
+      "correct_answer": true,
+      "explanation": "Benar. Chlorination dapat menghasilkan disinfection by-products yang berbahaya."
+    },
+    {
+      "id": 32,
+      "question": "Which of the following is a common disinfection by-product of chlorination?",
+      "type": "multiple_choice",
+      "options": [
+        "Chlorine gas",
+        "Chloramine",
+        "Ozone",
+        "Hydrogen peroxide"
+      ],
+      "correct_answer": 1,
+      "explanation": "Chloramine adalah salah satu disinfection by-product yang umum dari chlorination."
+    },
+    {
+      "id": 33,
+      "question": "T/F: The presence of bromide in source water can lead to the formation of brominated disinfection by-products.",
+      "type": "true_false",
+      "correct_answer": true,
+      "explanation": "Benar. Kehadiran bromide dalam air baku dapat menyebabkan pembentukan brominated disinfection by-products."
+    },
+    {
+      "id": 34,
+      "question": "The main goal of dechlorination is to…",
+      "type": "multiple_choice",
+      "options": [
+        "Remove excess chlorine",
+        "Add nutrients",
+        "Increase pH",
+        "Precipitate metals"
+      ],
+      "correct_answer": 1,
+      "explanation": "Tujuan utama dechlorination adalah menghilangkan klorin berlebih."
+    },
+    {
+      "id": 35,
+      "question": "T/F: Dechlorination is always necessary after chlorination.",
+      "type": "true_false",
+      "correct_answer": true,
+      "explanation": "Benar. Dechlorination selalu diperlukan setelah chlorination untuk menghilangkan klorin berlebih."
+    },
+    {
+      "id": 36,
+      "question": "Which method is commonly used for dechlorination?",
+      "type": "multiple_choice",
+      "options": [
+        "Activated carbon",
+        "Reverse osmosis",
+        "Chlorination",
+        "Filtration"
+      ],
+      "correct_answer": 1,
+      "explanation": "Activated carbon sering digunakan untuk dechlorination."
+    },
+    {
+      "id": 37,
+      "question": "T/F: The contact time for dechlorination is not critical.",
+      "type": "true_false",
+      "correct_answer": true,
+      "explanation": "Benar. Waktu kontak untuk dechlorination tidak terlalu kritis."
+    },
+    {
+      "id": 38,
+      "question": "Which of the following is a potential drawback of using chlorine for disinfection?",
+      "type": "multiple_choice",
+      "options": [
+        "Formation of trihalomethanes",
+        "Increased water hardness",
+        "Lowering of pH",
+        "Addition of nutrients"
+      ],
+      "correct_answer": 1,
+      "explanation": "Pembentukan trihalomethanes adalah salah satu kelemahan potensial dari penggunaan klorin untuk disinfeksi."
+    },
+    {
+      "id": 39,
+      "question": "T/F: Ozone is a stronger oxidant than chlorine.",
+      "type": "true_false",
+      "correct_answer": true,
+      "explanation": "Benar. Ozone adalah oksidator yang lebih kuat daripada klorin."
+    },
+    {
+      "id": 40,
+      "question": "The primary purpose of using UV light in water treatment is to…",
+      "type": "multiple_choice",
+      "options": [
+        "Remove particles",
+        "Kill microorganisms",
+        "Add taste",
+        "Remove color"
+      ],
+      "correct_answer": 1,
+      "explanation": "Tujuan utama penggunaan sinar UV dalam pengolahan air adalah untuk membunuh mikroorganisme."
+    },
+    {
+      "id": 41,
+      "question": "T/F: UV treatment does not involve the addition of chemicals.",
+      "type": "true_false",
+      "correct_answer": true,
+      "explanation": "Benar. Perlakuan UV tidak melibatkan penambahan bahan kimia."
+    },
+    {
+      "id": 42,
+      "question": "Which of the following is a limitation of UV disinfection?",
+      "type": "multiple_choice",
+      "options": [
+        "Effective against all pathogens",
+        "Requires electricity",
+        "Increases water temperature",
+        "Adds nutrients to water"
+      ],
+      "correct_answer": 1,
+      "explanation": "UV disinfection memerlukan listrik, yang bisa menjadi keterbatasan."
+    },
+    {
+      "id": 43,
+      "question": "T/F: UV light can cause the formation of harmful by-products in water.",
+      "type": "true_false",
+      "correct_answer": true,
+      "explanation": "Benar. Sinar UV dapat menyebabkan pembentukan by-products yang berbahaya dalam air."
+    },
+    {
+      "id": 44,
+      "question": "The main advantage of using ozone for disinfection is…",
+      "type": "multiple_choice",
+      "options": [
+        "Low cost",
+        "Strong oxidizing power",
+        "Easy to handle",
+        "No need for contact time"
+      ],
+      "correct_answer": 1,
+      "explanation": "Kekuatan oksidasi yang kuat adalah keuntungan utama menggunakan ozon untuk disinfeksi."
+    },
+    {
+      "id": 45,
+      "question": "T/F: Ozone leaves no residual disinfectant in the water.",
+      "type": "true_false",
+      "correct_answer": true,
+      "explanation": "Benar. Ozone tidak meninggalkan residu disinfektan dalam air."
+    },
+    {
+      "id": 46,
+      "question": "Which of the following is a disadvantage of using ozone?",
+      "type": "multiple_choice",
+      "options": [
+        "Formation of bromate",
+        "Increased water hardness",
+        "Lowering of pH",
+        "Addition of nutrients"
+      ],
+      "correct_answer": 1,
+      "explanation": "Pembentukan bromate adalah salah satu kelemahan dari penggunaan ozon."
+    },
+    {
+      "id": 47,
+      "question": "T/F: Ozone treatment is effective in removing color and odor from water.",
+      "type": "true_false",
+      "correct_answer": true,
+      "explanation": "Benar. Perlakuan ozon efektif dalam menghilangkan warna dan bau dari air."
+    },
+    {
+      "id": 48,
+      "question": "The primary purpose of using hydrogen peroxide in water treatment is to…",
+      "type": "multiple_choice",
+      "options": [
+        "Remove particles",
+        "Kill microorganisms",
+        "Add taste",
+        "Remove color"
+      ],
+      "correct_answer": 1,
+      "explanation": "Tujuan utama penggunaan hidrogen peroksida dalam pengolahan air adalah untuk membunuh mikroorganisme."
+    },
+    {
+      "id": 49,
+      "question": "T/F: Hydrogen peroxide is a strong oxidizer.",
+      "type": "true_false",
+      "correct_answer": true,
+      "explanation": "Benar. Hidrogen peroksida adalah oksidator yang kuat."
+    },
+    {
+      "id": 50,
+      "question": "Which of the following is a limitation of using hydrogen peroxide for disinfection?",
+      "type": "multiple_choice",
+      "options": [
+        "Effective against all pathogens",
+        "Requires electricity",
+        "Increases water temperature",
+        "Adds nutrients to water"
+      ],
+      "correct_answer": 1,
+      "explanation": "Penggunaan hidrogen peroksida memerlukan listrik, yang bisa menjadi keterbatasan."
+    },
+    {
+      "id": 51,
+      "question": "T/F: Hydrogen peroxide can cause the formation of harmful by-products in water.",
+      "type": "true_false",
+      "correct_answer": true,
+      "explanation": "Benar. Hidrogen peroksida dapat menyebabkan pembentukan by-products yang berbahaya dalam air."
+    },
+    {
+      "id": 52,
+      "question": "The main advantage of using hydrogen peroxide for disinfection is…",
+      "type": "multiple_choice",
+      "options": [
+        "Low cost",
+        "Strong oxidizing power",
+        "Easy to handle",
+        "No need for contact time"
+      ],
+      "correct_answer": 1,
+      "explanation": "Kekuatan oksidasi yang kuat adalah keuntungan utama menggunakan hidrogen peroksida untuk disinfeksi."
+    },
+    {
+      "id": 53,
+      "question": "T/F: Hydrogen peroxide leaves no residual disinfectant in the water.",
+      "type": "true_false",
+      "correct_answer": true,
+      "explanation": "Benar. Hidrogen peroksida tidak meninggalkan residu disinfektan dalam air."
+    },
+    {
+      "id": 54,
+      "question": "Which of the following is a disadvantage of using hydrogen peroxide?",
+      "type": "multiple_choice",
+      "options": [
+        "Formation of bromate",
+        "Increased water hardness",
+        "Lowering of pH",
+        "Addition of nutrients"
+      ],
+      "correct_answer": 1,
+      "explanation": "Pembentukan bromate adalah salah satu kelemahan dari penggunaan hidrogen peroksida."
+    },
+    {
+      "id": 55,
+      "question": "T/F: Hydrogen peroxide treatment is effective in removing color and odor from water.",
+      "type": "true_false",
+      "correct_answer": true,
+      "explanation": "Benar. Perlakuan hidrogen peroksida efektif dalam menghilangkan warna dan bau dari air."
+    },
+    {
+      "id": 56,
+      "question": "The primary purpose of using advanced oxidation processes (AOPs) in water treatment is to…",
+      "type": "multiple_choice",
+      "options": [
+        "Remove particles",
+        "Kill microorganisms",
+        "Add taste",
+        "Remove color"
+      ],
+      "correct_answer": 1,
+      "explanation": "Tujuan utama penggunaan advanced oxidation processes (AOPs) dalam pengolahan air adalah untuk membunuh mikroorganisme."
+    },
+    {
+      "id": 57,
+      "question": "T/F: AOPs can produce harmful disinfection by-products.",
+      "type": "true_false",
+      "correct_answer": true,
+      "explanation": "Benar. AOPs dapat menghasilkan disinfection by-products yang berbahaya."
+    },
+    {
+      "id": 58,
+      "question": "Which of the following is a common disinfection by-product of AOPs?",
+      "type": "multiple_choice",
+      "options": [
+        "Chlorine gas",
+        "Chloramine",
+        "Ozone",
+        "Hydrogen peroxide"
+      ],
+      "correct_answer": 1,
+      "explanation": "Chloramine adalah salah satu disinfection by-product yang umum dari AOPs."
+    },
+    {
+      "id": 59,
+      "question": "T/F: The presence of bromide in source water can lead to the formation of brominated disinfection by-products.",
+      "type": "true_false",
+      "correct_answer": true,
+      "explanation": "Benar. Kehadiran bromide dalam air baku dapat menyebabkan pembentukan brominated disinfection by-products."
+    },
+    {
+      "id": 60,
+      "question": "The main goal of using AOPs is to…",
+      "type": "multiple_choice",
+      "options": [
+        "Remove excess chlorine",
+        "Add nutrients",
+        "Increase pH",
+        "Precipitate metals"
+      ],
+      "correct_answer": 1,
+      "explanation": "Tujuan utama penggunaan AOPs adalah untuk menghilangkan klorin berlebih."
+    },
+    {
+      "id": 61,
+      "question": "T/F: AOPs are always necessary after chlorination.",
+      "type": "true_false",
+      "correct_answer": true,
+      "explanation": "Benar. AOPs selalu diperlukan setelah chlorination untuk menghilangkan klorin berlebih."
+    },
+    {
+      "id": 62,
+      "question": "Which method is commonly used in AOPs?",
+      "type": "multiple_choice",
+      "options": [
+        "Activated carbon",
+        "Reverse osmosis",
+        "Chlorination",
+        "Ozone and hydrogen peroxide"
+      ],
+      "correct_answer": 1,
+      "explanation": "Ozone dan hidrogen peroksida sering digunakan dalam AOPs."
+    },
+    {
+      "id": 63,
+      "question": "T/F: The contact time for AOPs is not critical.",
+      "type": "true_false",
+      "correct_answer": true,
+      "explanation": "Benar. Waktu kontak untuk AOPs tidak terlalu kritis."
+    },
+    {
+      "id": 64,
+      "question": "Which of the following is a potential drawback of using AOPs?",
+      "type": "multiple_choice",
+      "options": [
+        "Formation of trihalomethanes",
+        "Increased water hardness",
+        "Lowering of pH",
+        "Addition of nutrients"
+      ],
+      "correct_answer": 1,
+      "explanation": "Pembentukan trihalomethanes adalah salah satu kelemahan potensial dari penggunaan AOPs."
+    },
+    {
+      "id": 65,
+      "question": "T/F: Ozone and hydrogen peroxide can cause the formation of harmful by-products in water.",
+      "type": "true_false",
+      "correct_answer": true,
+      "explanation": "Benar. Ozone dan hidrogen peroksida dapat menyebabkan pembentukan by-products yang berbahaya dalam air."
+    },
+    {
+      "id": 66,
+      "question": "The main advantage of using AOPs is…",
+      "type": "multiple_choice",
+      "options": [
+        "Low cost",
+        "Strong oxidizing power",
+        "Easy to handle",
+        "No need for contact time"
+      ],
+      "correct_answer": 1,
+      "explanation": "Kekuatan oksidasi yang kuat adalah keuntungan utama menggunakan AOPs."
+    },
+    {
+      "id": 67,
+      "question": "T/F: AOPs leave no residual disinfectant in the water.",
+      "type": "true_false",
+      "correct_answer": true,
+      "explanation": "Benar. AOPs tidak meninggalkan residu disinfektan dalam air."
+    },
+    {
+      "id": 68,
+      "question": "Which of the following is a disadvantage of using AOPs?",
+      "type": "multiple_choice",
+      "options": [
+        "Formation of bromate",
+        "Increased water hardness",
+        "Lowering of pH",
+        "Addition of nutrients"
+      ],
+      "correct_answer": 1,
+      "explanation": "Pembentukan bromate adalah salah satu kelemahan dari penggunaan AOPs."
+    },
+    {
+      "id": 69,
+      "question": "T/F: AOPs treatment is effective in removing color and odor from water.",
+      "type": "true_false",
+      "correct_answer": true,
+      "explanation": "Benar. Perlakuan AOPs efektif dalam menghilangkan warna dan bau dari air."
     }
   ]
 }
