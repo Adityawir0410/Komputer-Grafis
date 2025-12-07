@@ -2,7 +2,7 @@
 
 "use client";
 import VRNavigation from './VRNavigation';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useTour } from '../_context/TourContext';
 
 export default function Pos1() {
